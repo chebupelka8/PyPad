@@ -1,0 +1,120 @@
+{
+    "information": {
+        "name": "pyPad-theme",
+        "version": "1.0"
+    },
+    
+    "workbench.theme.colorCustomization": {
+        "background": "#1d2021",
+        "editor.background": "#1d2021",
+        "editor.syntaxHighlighterCustomization": {
+            "-default": {
+                "color": "#fbf1c7"
+            },
+            "-keywords": {
+                "color": "#ea5f5f",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-string": {
+                "color": "#9ec1a3",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-comment": {
+                "color": "#8b8c89",
+                "font": {
+                    "italic": true,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-brackets": {
+                "color": "#fb6f92",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-decorator": {
+                "color": "#ffbd00",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-functions": {
+                "color": "#e09f3e",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-types": {
+                "color": "#e9c46a",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-logical": {
+                "color": "#ff8fab",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-numbers": {
+                "color": "#d88c9a",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-symbols": {
+                "color": "#fb6f92",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "@self": {
+                "color": "#cce3de",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-classes": {
+                "color": "#7bf1a8",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            },
+            "-defindfunc": {
+                "color": "#ffef9f",
+                "font": {
+                    "italic": false,
+                    "bold": false,
+                    "underline": false
+                }
+            }
+        }
+    }
+}

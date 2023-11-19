@@ -1,0 +1,116 @@
+@import url('https://fonts.cdnfonts.com/css/cascadia-code');
+
+* {
+    font-family: 'Cascadia Code', sans-serif;
+    color: #3e3d3d;
+}
+
+QWidget#main-widget {
+    padding: 0;
+    margin: 0;
+    background-color: #1d2021;
+}
+
+/* CODE EDITOR AREA */
+QPlainTextEdit {
+    padding: 5px;
+    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 1000px;
+    min-width: 1000px;
+    border-radius: 7px;
+}
+
+
+/*  SCROLLBAR:VERTICAL  */
+QScrollBar:vertical {
+    border: none;
+    width: 10px;
+    background-color: #1d2021;
+    border-radius: 4px;
+}
+
+QScrollBar:handle:vertical {
+    background-color: #3e3d3d;
+    border-radius: 4px;
+}
+
+QScrollBar:handle:vertical:hover {
+    background-color: #4c4a4a;
+}
+
+QScrollBar:handle:vertical:pressed {
+    background-color: #5c5b5b;
+}
+
+QScrollBar::sub-line::vertical {
+    border: none;
+    background: none;
+    height: 15px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-line::vertical {
+    border: none;
+    background: none;
+    height: 15px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+
+/*  SCROLLBAR:horizontal */
+QScrollBar:horizontal {
+    border: none;
+    height: 10px;
+    background-color: #1d2021;
+    border-radius: 4px;
+}
+
+QScrollBar:handle:horizontal {
+    background-color: #3e3d3d;
+    border-radius: 4px;
+}
+
+QScrollBar:handle:horizontal:hover {
+    background-color: #4c4a4a;
+}
+
+QScrollBar:handle:horizontal:pressed {
+    background-color: #5c5b5b;
+}
+
+QScrollBar::sub-line::horizontal {
+    border: none;
+    background: none;
+    width: 15px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-line::horizontal {
+    border: none;
+    background: none;
+    width: 15px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+    background: none;
+}
