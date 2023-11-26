@@ -95,14 +95,13 @@ class Highlighter(QSyntaxHighlighter):
                     # pass
                     lines = self.plainText.split("\n")
                     for i in range(len(lines)):
-                        print(lines[i][match.start() - 1])
                         if lines[i][match.start() - 1].isalpha():
                             return
                 
                     # if txt[match.start() - 1].isalpha():
                     #     continue
                 except:
-                    print("ER")
+                    pass
                 
                 # lines = self.plainText.split("\n")
                 # for i in len(lines):

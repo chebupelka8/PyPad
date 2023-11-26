@@ -12,9 +12,9 @@ class FileManager(QTreeView):
         self.model.setRootPath("")
         self.setModel(self.model)
         self.setRootIndex(self.model.index(""))
+        self.setHeaderHidden(True)
 
-        header = self.header()
-        for i in range(1, 4): header.setSectionHidden(i, True)
+        for i in range(1, 4): self.header().setSectionHidden(i, True)
     
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
@@ -32,16 +32,20 @@ class FileManager(QTreeView):
         
         return path
     
-    def _open_folder(self, __path: str = None) -> None:
+    def _open_folder(self, __path: str = None) -> None | str:
         if __path == None or not isinstance(__path, str): __path = QFileDialog.getExistingDirectory()
         if __path == "": return
 
         self.model.setRootPath(__path)
         self.setRootIndex(self.model.index(__path))
+
+        return __path if __path != "" else None
     
-    def _open_file(self, __path_to_file: str = None) -> None:
+    def _open_file(self, __path_to_file: str = None) -> None | str:
         if __path_to_file == None or not isinstance(__path_to_file, str): __path_to_file = QFileDialog.getOpenFileName()[0]
         if __path_to_file == "": return
 
         __path = "/".join(__path_to_file.split("/")[:-1])
         self._open_folder(__path)
+
+        return __path_to_file if __path_to_file != "" else None

@@ -1,16 +1,134 @@
 from PySide6.QtWidgets import (
-    QPlainTextEdit
+    QPlainTextEdit, QTextEdit
 )
+from PySide6.QtGui import (
+    QFontMetrics, QFont, QColor, 
+    QTextFormat, QTextCursor, QKeyEvent
+)
+from PySide6.QtCore import Qt
 from scripts.highlighter import Highlighter
-from scripts.load import load_style
+from scripts.constants import data, theme
 
 
 class CodeEditorArea(QPlainTextEdit):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super(CodeEditorArea, self).__init__(parent)
         
         self.setLineWrapMode(QPlainTextEdit.NoWrap)
-        Highlighter(self)
+        
+        self._highlightCurrentLine()
+        self._updateCursorWidth()
+        if data["workbench.settingsCustomization"]["editor.cursorStyle"] == "block":
+            self.cursorPositionChanged.connect(self._highlightCurrentLine)
+            self.blockCountChanged.connect(self._updateCursorWidth)
+        else:
+            self.setCursorWidth(1)
+        # self.textChanged.connect(self._updateAutoSymbols)
+        # self.selectionChanged.connect(self._updateSelection)
+        
+        Highlighter(self) # set syntax highlitning
+
+        self.setStyleSheet(
+            f"""
+            font-size: {data["workbench.settingsCustomization"]["editor.fontSize"]}px;
+            color: {theme["workbench.theme.colorCustomization"]["editor.syntaxHighlighterCustomization"]["-default"]["color"]};
+            background-color: {theme["workbench.theme.colorCustomization"]["editor.background"]};
+            font-family: '{data["workbench.settingsCustomization"]["editor.fontFamily"]}';
+            """
+        )
+        self.setTabStopDistance(
+            QFontMetrics(QFont(data["workbench.settingsCustomization"]["editor.fontFamily"], int(data["workbench.settingsCustomization"]["editor.fontSize"]))).horizontalAdvance('    ') - 15
+        )
+    
+    def _highlightCurrentLine(self):
+        extraSelections = []
+
+        if not self.isReadOnly() and self.hasFocus():
+            selection = QTextEdit.ExtraSelection()
+
+            lineColor = QColor("#1A1A1A").lighter(180)
+
+            selection.format.setBackground(lineColor)
+            selection.format.setProperty(QTextFormat.FullWidthSelection, True)
+            selection.cursor = self.textCursor()
+            selection.cursor.clearSelection()
+
+            extraSelections.append(selection)
+
+        self.setExtraSelections(extraSelections)
+    
+    def _updateCursorWidth(self):
+        cursor = self.textCursor()
+        
+        try:
+            current_symbol = cursor.block().text()[cursor.positionInBlock()]
+        except:
+            current_symbol = " "
+
+        self.setCursorWidth(
+            QFontMetrics(QFont(data["workbench.settingsCustomization"]["editor.fontFamily"], 
+            int(data["workbench.settingsCustomization"]["editor.fontSize"]))).horizontalAdvance(current_symbol) - 3
+        )
+    
+    def _updateAutoSymbols(self):
+        cursor = self.textCursor()
+        cursor.movePosition(QTextCursor.Left, QTextCursor.KeepAnchor)
+        selectedText = cursor.selectedText()
+        # print(selectedText)
+
+        def _insert(__symbols: list):
+            if selectedText == __symbols[0]:
+                cursor.insertText(f"{selectedText}".join(__symbols))
+                cursor.setPosition(cursor.position() - 1)
+                self.setTextCursor(cursor)
+        
+        _insert(["(", ")"])
+        _insert(["[", "]"])
+        _insert(["{", "}"])
+        # _insert(["'", "'"])
+        # _insert(['"', '"'])
+        
 
     def keyPressEvent(self, event):
-        super().keyPressEvent(event)
+
+        cursor = self.textCursor()
+        selectedText = cursor.selectedText()
+
+        def _insert(__symbols: list):
+            cursor.insertText(f"{selectedText}".join(__symbols))
+            cursor.setPosition(cursor.position() - 1)
+            self.setTextCursor(cursor)
+
+        if event.key() == Qt.Key.Key_ParenLeft:
+            _insert(["(", ")"])
+        
+        elif event.key() == Qt.Key.Key_BraceLeft:
+            _insert(["{", "}"])
+        
+        elif event.key() == Qt.Key.Key_BracketLeft:
+            _insert(["[", "]"])
+        
+        elif event.key() == Qt.Key.Key_QuoteDbl:
+            _insert(['"', '"'])
+        
+        elif event.key() == Qt.Key.Key_Apostrophe:
+            _insert(["'", "'"])
+        
+        elif event.key() == Qt.Key.Key_Return:
+        
+            previous = self.toPlainText().split("\n")[cursor.blockNumber()].replace(" ", "")
+            if previous == "": previous = "none" # it's need for remove exception - list has no index -1
+
+            if previous[-1] == ":" or self.toPlainText().split("\n")[cursor.blockNumber()][:4] == "    ":
+                cursor.insertText("\n    ")
+            else:
+                super().keyPressEvent(event)
+        
+        else:
+            super().keyPressEvent(event)
+
+
+
+        # print(event)
+
+    

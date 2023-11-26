@@ -11,7 +11,7 @@ QDialog {
 }
 
 QLabel {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 QLineEdit {
@@ -19,6 +19,7 @@ QLineEdit {
     border: 1px solid white;
     padding: 2px;
     border-radius: 7px;
+    font-size: 14px;
 }
 
 QPushButton {
@@ -27,6 +28,7 @@ QPushButton {
     border-radius: 7px;
     padding: 2px;
     width: 80px;
+    font-size: 14px;
 }
 
 QPushButton:hover {

@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QMenuBar, QMenu, QWidget
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtWidgets import QMenuBar, QMenu
+from PySide6.QtGui import QAction
 from scripts.load import load_style
 
 
@@ -89,6 +89,13 @@ class MenuBar(QMenuBar):
         self.open_settings_menu_action = QAction("Open Settings", self)
         self.settings_menu.addAction(self.open_settings_menu_action)
 
+        # create "Console" menu
+        self.console_menu = QMenu("Console", self)
+        self.addMenu(self.console_menu)
+
+        # create "Launch Console" action
+        self.launch_console = QAction("Launch Console", self)
+        self.console_menu.addAction(self.launch_console)
         
         # create "Run" menu
         self.run_menu = QMenu("Run", self)
@@ -97,3 +104,7 @@ class MenuBar(QMenuBar):
         # create "Run File" action
         self.run_file_action = QAction("Run File", self)
         self.run_menu.addAction(self.run_file_action)
+
+        # create "Run In Console" action
+        self.run_in_console_action = QAction("Run In Console", self)
+        self.run_menu.addAction(self.run_in_console_action)

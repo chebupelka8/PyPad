@@ -8,13 +8,13 @@ class InputCreateNewFile(QDialog):
         super().__init__(parent = parent, f = Qt.WindowType.FramelessWindowHint)
 
         self.setWindowTitle("")
-        self.setMinimumWidth(300)
+        self.setMinimumWidth(500)
         self.setStyleSheet(load_style("source/gui/style/input_file_name.css"))
 
         self.mainLayout = QVBoxLayout()
         self.buttonLayout = QHBoxLayout()
 
-        self.mainLayout.addWidget(QLabel("Enter the path for the new file"))
+        self.mainLayout.addWidget(QLabel("Enter the path for the new file"), alignment=Qt.AlignmentFlag.AlignCenter)
         self.inputName = QLineEdit()
         self.mainLayout.addWidget(self.inputName)
         self.mainLayout.addLayout(self.buttonLayout)
@@ -23,7 +23,7 @@ class InputCreateNewFile(QDialog):
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
 
-        self.buttonLayout.addWidget(self.buttons)
+        self.buttonLayout.addWidget(self.buttons, alignment=Qt.AlignmentFlag.AlignCenter)
         
         self.setLayout(self.mainLayout) # set main layout (draw)
     
