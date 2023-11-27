@@ -48,6 +48,7 @@ class FileManager(QTreeView):
         __path = "/".join(__path_to_file.split("/")[:-1])
         self._open_folder(__path)
 
+        self.selectionModel().clearSelection()
         self.selectionModel().select(self.model.index(__path_to_file), QItemSelectionModel.Select) # select opened file
 
         return __path_to_file if __path_to_file != "" else None
