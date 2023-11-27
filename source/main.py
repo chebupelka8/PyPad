@@ -13,6 +13,7 @@ from scripts.input_newfile import InputCreateNewFile
 from scripts.menubar import MenuBar
 from scripts.run_console import ConsoleRunWorker
 from scripts.console import ConsoleEmulator
+from scripts.welcome_page import WelcomePage
 import sys, os
 
 
@@ -65,9 +66,14 @@ class MainWidget(QWidget):
         # editor set up
         self.codeArea = CodeEditorArea(self)
         self.codeArea.setReadOnly(True)
+        self.codeArea.setVisible(False)
 
         # console set up
         self.consoleEmulator = ConsoleEmulator()
+
+        # welcome setup
+        self.welcomePage = WelcomePage(self)
+        self.welcomePage.setVisible(True)
 
         # file manager set up
         self.fileManager = FileManager()
@@ -76,6 +82,7 @@ class MainWidget(QWidget):
         # add Widgets to layouts
         self.codeLayout.addWidget(self.fileManager, stretch=4)
         self.codeLayout.addWidget(self.codeArea, stretch=9)
+        self.codeLayout.addWidget(self.welcomePage, stretch=9)
     
     def closeEvent(self, event: QCloseEvent) -> None:
         try:
@@ -91,6 +98,8 @@ class MainWidget(QWidget):
     
     def _open_file_editor(self, __path: str):
         self.codeArea.setReadOnly(False)
+        self.welcomePage.setVisible(False)
+        self.codeArea.setVisible(True)
 
         if os.path.isfile(__path):
             try:

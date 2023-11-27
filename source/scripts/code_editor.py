@@ -23,6 +23,7 @@ class CodeEditorArea(QPlainTextEdit):
             self.blockCountChanged.connect(self._updateCursorWidth)
         else:
             self.setCursorWidth(1)
+        self.cursorPositionChanged.connect(self._updateCurrentLine)
         # self.textChanged.connect(self._updateAutoSymbols)
         # self.selectionChanged.connect(self._updateSelection)
         
@@ -39,6 +40,9 @@ class CodeEditorArea(QPlainTextEdit):
         self.setTabStopDistance(
             QFontMetrics(QFont(data["workbench.settingsCustomization"]["editor.fontFamily"], int(data["workbench.settingsCustomization"]["editor.fontSize"]))).horizontalAdvance('    ') - 15
         )
+
+        # variables 
+        self.currentLine = None
     
     def _highlightCurrentLine(self):
         extraSelections = []
@@ -87,7 +91,10 @@ class CodeEditorArea(QPlainTextEdit):
         _insert(["{", "}"])
         # _insert(["'", "'"])
         # _insert(['"', '"'])
-        
+    
+    def _updateCurrentLine(self):
+        cursor = self.textCursor()
+        self.currentLine = cursor.blockNumber()
 
     def keyPressEvent(self, event):
 
@@ -98,6 +105,17 @@ class CodeEditorArea(QPlainTextEdit):
             cursor.insertText(f"{selectedText}".join(__symbols))
             cursor.setPosition(cursor.position() - 1)
             self.setTextCursor(cursor)
+        
+        def _double_symbol(__symbol: str):
+            if len(self.toPlainText().split("\n")[self.currentLine][cursor.positionInBlock():]) != 0:
+            
+                if self.toPlainText().split("\n")[self.currentLine][cursor.positionInBlock()] == __symbol:
+                    cursor.setPosition(cursor.position() + 1)
+                    self.setTextCursor(cursor)
+                
+                else: raise Exception("//errror")
+            
+            else: raise Exception("//error")
 
         if event.key() == Qt.Key.Key_ParenLeft:
             _insert(["(", ")"])
@@ -113,6 +131,18 @@ class CodeEditorArea(QPlainTextEdit):
         
         elif event.key() == Qt.Key.Key_Apostrophe:
             _insert(["'", "'"])
+        
+        elif event.key() == Qt.Key.Key_ParenRight:
+            try: _double_symbol(")")
+            except: super().keyPressEvent(event)
+        
+        elif event.key() == Qt.Key.Key_BraceRight:
+            try: _double_symbol("}")
+            except: super().keyPressEvent(event)
+        
+        elif event.key() == Qt.Key.Key_BracketRight:
+            try: _double_symbol("]")
+            except: super().keyPressEvent(event)
         
         elif event.key() == Qt.Key.Key_Return:
         
