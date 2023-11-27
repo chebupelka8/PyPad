@@ -116,6 +116,17 @@ class CodeEditorArea(QPlainTextEdit):
                 else: raise Exception("//errror")
             
             else: raise Exception("//error")
+        
+        def _find_tabs(string: str) -> int:
+            res = 0
+            for letter in string:
+                if letter == " ": res += 1
+                else: break
+            
+            return res // 4
+                
+        def _find_colons(string: str) -> int:
+            return 1 if string.rstrip()[-1] == ":" else 0
 
         if event.key() == Qt.Key.Key_ParenLeft:
             _insert(["(", ")"])
@@ -144,21 +155,23 @@ class CodeEditorArea(QPlainTextEdit):
             try: _double_symbol("]")
             except: super().keyPressEvent(event)
         
+        elif event.key() == Qt.Key.Key_Tab:
+            cursor.insertText("    ")
+        
         elif event.key() == Qt.Key.Key_Return:
         
-            previous = self.toPlainText().split("\n")[cursor.blockNumber()].replace(" ", "")
-            if previous == "": previous = "none" # it's need for remove exception - list has no index -1
-
-            if previous[-1] == ":" or self.toPlainText().split("\n")[cursor.blockNumber()][:4] == "    ":
-                cursor.insertText("\n    ")
+            previous = self.toPlainText().split("\n")[cursor.blockNumber()]
+            # if previous.replace(" ", "") == "": previous = "//none" # it's need for remove exception - list has no index -1
+            
+            if previous == "": prev = "//none" # it's need for remove exception - list has no index -1
+            elif not previous.isspace(): prev = previous.rstrip()[-1]
+            else: prev = previous
+            
+            if prev[-1] == ":" or self.toPlainText().split("\n")[cursor.blockNumber()][:4] == "    ":
+                tab_count = _find_tabs(previous) + _find_colons(previous)
+                cursor.insertText("\n" + ("    " * tab_count))
             else:
                 super().keyPressEvent(event)
         
         else:
             super().keyPressEvent(event)
-
-
-
-        # print(event)
-
-    
