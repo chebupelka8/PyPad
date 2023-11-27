@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QTreeView, QFileSystemModel, QFileDialog
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QItemSelectionModel
 from scripts.load import load_style
 
 
@@ -20,7 +20,7 @@ class FileManager(QTreeView):
         super().mousePressEvent(event)
 
         if event.button() == Qt.MouseButton.RightButton:
-            print("hello")
+            pass
     
     def _get_path(self, index):
         path = self.model.filePath(index)
@@ -47,5 +47,7 @@ class FileManager(QTreeView):
 
         __path = "/".join(__path_to_file.split("/")[:-1])
         self._open_folder(__path)
+
+        self.selectionModel().select(self.model.index(__path_to_file), QItemSelectionModel.Select) # select opened file
 
         return __path_to_file if __path_to_file != "" else None
