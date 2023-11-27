@@ -93,6 +93,7 @@ class MainWidget(QWidget):
     
     def _open_file(self):
         f = self.fileManager._open_file()
+        self.codeArea._updateCurrentLine()
 
         if f != None: self._open_file_editor(f)
     
