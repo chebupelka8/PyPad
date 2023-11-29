@@ -1,3 +1,6 @@
+![alt text](http://url/to/img.png)
+
+
 # PyPad
     version - 0.1 
     condition - in development
