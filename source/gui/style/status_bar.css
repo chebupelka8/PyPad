@@ -1,0 +1,15 @@
+@import url('https://fonts.cdnfonts.com/css/cascadia-code');
+
+* {
+    font-family: 'Cascadia Code', sans-serif;
+    color: #3e3d3d;
+}
+
+QFrame#status-bar {
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 7px;
+}
+
+QLabel {
+    font-size: 16px;
+}

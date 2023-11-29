@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel
 from PySide6.QtCore import Qt
 from scripts.load import load_style
 from PySide6.QtGui import QPixmap
+from scripts.vector import Vec2
 
 
 class WelcomePage(QWidget):
@@ -12,6 +13,11 @@ class WelcomePage(QWidget):
         self.setObjectName("welcome-page")
 
         self.mainLayout = QVBoxLayout()
+        
+        self.subWidget = QWidget(self)
+        self.subWidget.setFixedSize(Vec2(1000, 1000).qsize)
+        self.mainLayout.addWidget(self.subWidget, alignment=Qt.AlignmentFlag.AlignCenter)
+        
         self.horLayout = QHBoxLayout()
         self.horLayout.setSpacing(0)
         
@@ -23,17 +29,17 @@ class WelcomePage(QWidget):
         self.viewIcon = QLabel()
         pixmap = QPixmap("source/gui/icons/main_icon_1.png")
         self.viewIcon.setPixmap(pixmap)
+        self.viewIcon.setContentsMargins(50, 0, 0, 0)
 
         self.labelName = QLabel("PyPad")
-        self.welcomeLabel = QLabel("Welcome to")
-        self.welcomeLabel.resize(100, 40)
+        self.labelName.setContentsMargins(0, 0, 280, 0)
         
-        # self.horLayout.addSpacing(250)
-        self.horLayout.addWidget(self.welcomeLabel, alignment=Qt.AlignmentFlag.AlignRight)
+        self.welcomeLabel = QLabel("Welcome to")
+        self.welcomeLabel.setContentsMargins(240, 0, 0, 0)
+        
+        self.horLayout.addWidget(self.welcomeLabel, alignment=Qt.AlignmentFlag.AlignCenter)
         self.horLayout.addWidget(self.viewIcon, alignment=Qt.AlignmentFlag.AlignCenter)
-        self.horLayout.addSpacing(5)
-        self.horLayout.addWidget(self.labelName, alignment=Qt.AlignmentFlag.AlignLeft)
-        # self.horLayout.addSpacing(305)
+        self.horLayout.addWidget(self.labelName, alignment=Qt.AlignmentFlag.AlignCenter)
 
-        self.mainLayout.addLayout(self.horLayout)
+        self.subWidget.setLayout(self.horLayout)
 

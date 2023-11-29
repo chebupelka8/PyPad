@@ -18,6 +18,11 @@ class MenuBar(QMenuBar):
         self.new_file_action = QAction("New File", self)
         self.new_file_action.setShortcut("Ctrl+N")
         self.file_menu.addAction(self.new_file_action)
+
+        # create  "New Folder" action
+        self.new_folder_action = QAction("New Folder", self)
+        # self.new_folder_action.setShortcut("Ctrl+Shift+N")
+        self.file_menu.addAction(self.new_folder_action)
         self.file_menu.addSeparator()
         
         # create "Open File" action

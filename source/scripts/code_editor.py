@@ -24,8 +24,6 @@ class CodeEditorArea(QPlainTextEdit):
         else:
             self.setCursorWidth(1)
         self.cursorPositionChanged.connect(self._updateCurrentLine)
-        # self.textChanged.connect(self._updateAutoSymbols)
-        # self.selectionChanged.connect(self._updateSelection)
         
         Highlighter(self) # set syntax highlitning
 
@@ -95,6 +93,13 @@ class CodeEditorArea(QPlainTextEdit):
     def _updateCurrentLine(self):
         cursor = self.textCursor()
         self.currentLine = cursor.blockNumber()
+    
+    def getCursorPosition(self) -> list:
+        """returns list[line, column]"""
+        
+        cursor = self.textCursor()
+
+        return [self.currentLine, cursor.positionInBlock()]
 
     def keyPressEvent(self, event):
 

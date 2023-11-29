@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import (
     QWidget, QApplication, QVBoxLayout, QHBoxLayout, 
+    QLabel
 )
 from PySide6.QtGui import (
     QCloseEvent, QIcon
@@ -14,6 +15,7 @@ from scripts.menubar import MenuBar
 from scripts.run_console import ConsoleRunWorker
 from scripts.console import ConsoleEmulator
 from scripts.welcome_page import WelcomePage
+from scripts.status_bar import StatusBar
 import sys, os
 
 
@@ -26,11 +28,12 @@ class MainWidget(QWidget):
         self.setWindowIcon(QIcon("source/gui/icons/main_icon_1.png"))
         self.setObjectName("main-widget")
         self.setStyleSheet(load_style("source/gui/style/style.css"))
-
+    
         self.call_layouts()
         self.setup_ui()
 
         self.setLayout(self.mainLayout) # set main layout
+        
         self.create_menu_bar()
 
         # variables 
@@ -40,13 +43,16 @@ class MainWidget(QWidget):
     def call_layouts(self):
         self.mainLayout = QVBoxLayout()
         self.codeLayout = QHBoxLayout()
+        self.sideBarLayout = QHBoxLayout()
         
         self.mainLayout.addLayout(self.codeLayout)
+        self.mainLayout.addLayout(self.sideBarLayout)
 
     def create_menu_bar(self):
         self.menu_bar = MenuBar(self)
 
         self.menu_bar.new_file_action.triggered.connect(self._open_input_newfile_dialog)
+        self.menu_bar.new_folder_action.triggered.connect(self._open_input_newfolder_dialog)
         self.menu_bar.open_file_action.triggered.connect(self._open_file)
         self.menu_bar.open_folder_action.triggered.connect(lambda: self.fileManager._open_folder())
         self.menu_bar.save_file_action.triggered.connect(self._save_file)
@@ -65,7 +71,6 @@ class MainWidget(QWidget):
     def setup_ui(self):
         # editor set up
         self.codeArea = CodeEditorArea(self)
-        self.codeArea.setReadOnly(True)
         self.codeArea.setVisible(False)
 
         # console set up
@@ -79,33 +84,37 @@ class MainWidget(QWidget):
         self.fileManager = FileManager()
         self.fileManager.clicked.connect(lambda index: self._open_file_editor(self.fileManager._get_path(index)))
 
+        # side bar set up
+        self.statusBar = StatusBar(self)
+        self.codeArea.cursorPositionChanged.connect(lambda: self.statusBar._setCurrentPos([str(i) for i in self.codeArea.getCursorPosition()]))
+
         # add Widgets to layouts
         self.codeLayout.addWidget(self.fileManager, stretch=4)
         self.codeLayout.addWidget(self.codeArea, stretch=9)
         self.codeLayout.addWidget(self.welcomePage, stretch=9)
+        self.sideBarLayout.addWidget(self.statusBar)
     
     def closeEvent(self, event: QCloseEvent) -> None:
-        try:
-            self.inputFileName.destroy()
-        except:
-            pass
+        self.consoleEmulator.destroy()
+        try: self.inputFileName.destroy()
+        except AttributeError: pass
+        
         super().closeEvent(event)
     
     def _open_file(self):
         f = self.fileManager._open_file()
-        self.codeArea._updateCurrentLine()
 
         if f != None: self._open_file_editor(f)
     
     def _open_file_editor(self, __path: str):
-        self.codeArea.setReadOnly(False)
-        self.welcomePage.setVisible(False)
-        self.codeArea.setVisible(True)
 
         if os.path.isfile(__path):
             try:
                 with open(__path, "r", encoding="utf-8") as file:
                     code = file.read()
+                
+                self.welcomePage.setVisible(False)
+                self.codeArea.setVisible(True)
                 
                 self.codeArea.clear()
                 self.codeArea.insertPlainText(code)
@@ -125,6 +134,12 @@ class MainWidget(QWidget):
 
         self.inputFileName.buttons.accepted.connect(lambda: self._create_new_file(self.inputFileName.getFileName()))
     
+    def _open_input_newfolder_dialog(self):
+        self.inputFileName = InputCreateNewFile(self)
+        self.inputFileName.show()
+
+        self.inputFileName.buttons.accepted.connect(lambda: self._create_new_folder(self.inputFileName.getFileName()))
+    
     def _create_new_file(self, __filename: str) -> None:
         
         filename = f"{self.fileManager._get_directory()}/{__filename}"
@@ -133,7 +148,14 @@ class MainWidget(QWidget):
         with open(f"{self.fileManager._get_directory()}/{__filename}", "w") as file:
             file.write("")
         
+        self.fileManager._open_file(filename)
         self._open_file_editor(filename)
+    
+    def _create_new_folder(self, __foldername: str) -> None:
+        foldername = f"{self.fileManager._get_directory()}/{__foldername}"
+        if foldername == "": return
+
+        os.mkdir(foldername)
     
     def _run_python_file(self):
         self._save_file()

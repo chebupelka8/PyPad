@@ -88,29 +88,29 @@ class Highlighter(QSyntaxHighlighter):
                 if txt.find("(") != -1: count = len(txt[6:txt.find("(")])
                 else: count = len(txt[6:txt.find(":")])
 
-            elif "0" in txt or "1" in txt or "2" in txt or "3" in txt or "4" in txt or "5" in txt or "6" in txt or "7" in txt or "8" in txt or "9" in txt:
-                # print(txt[match.start() - 1])
-                try:
-                    # print(self.plainText)
-                    # pass
-                    lines = self.plainText.split("\n")
-                    for i in range(len(lines)):
-                        if lines[i][match.start() - 1].isalpha():
-                            return
+            # elif "0" in txt or "1" in txt or "2" in txt or "3" in txt or "4" in txt or "5" in txt or "6" in txt or "7" in txt or "8" in txt or "9" in txt:
+            #     # print(txt[match.start() - 1])
+            #     try:
+            #         # print(self.plainText)
+            #         # pass
+            #         lines = self.plainText.split("\n")
+            #         for i in range(len(lines)):
+            #             if lines[i][match.start() - 1].isalpha():
+            #                 return
                 
-                    # if txt[match.start() - 1].isalpha():
-                    #     continue
-                except:
-                    pass
+            #         # if txt[match.start() - 1].isalpha():
+            #         #     continue
+            #     except:
+            #         pass
                 
-                # lines = self.plainText.split("\n")
-                # for i in len(lines):
-                #     if lines[i][match.start() - 1].isalpha():
-                #         return
+            #     # lines = self.plainText.split("\n")
+            #     # for i in len(lines):
+            #     #     if lines[i][match.start() - 1].isalpha():
+            #     #         return
 
-                # print(list(re.finditer(r"0|1|2|3|4|5|6|7|8|9", txt)))
-                start = match.start()
-                count = match.end() - match.start()
+            #     # print(list(re.finditer(r"0|1|2|3|4|5|6|7|8|9", txt)))
+            #     start = match.start()
+            #     count = match.end() - match.start()
                 # print(txt.find("9"))
                 
                 # if txt.find("(")    count = len(txt[6:txt.find]) 

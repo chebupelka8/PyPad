@@ -11,5 +11,6 @@ QTreeView {
     background-color: #1d2021;
     border: 1px solid rgba(255, 255, 255, 0.2);
     min-width: 400px;
+    max-width: 600px;
     border-radius: 7px;
 }
