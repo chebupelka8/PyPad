@@ -1,4 +1,4 @@
-<p align="center"> <img src="/source/gui/icons/main_icon_1.png" width=100></img> </p>
+<p align="center"> <img src="/source/gui/icons/main_icon_1.png" width=80></img> </p>
 
 
 # PyPad
