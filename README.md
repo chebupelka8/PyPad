@@ -1,5 +1,5 @@
 ![Alt text](/source/gui/icons/main_icon_1.png)
-<img src="/source/gui/icons/main_icon_1.png"></img>
+<p align="center"> <img src="/source/gui/icons/main_icon_1.png"></img> </p>
 
 
 # PyPad
