@@ -1,4 +1,4 @@
-![alt text]([http://url/to/img.png](https://github.com/chebupelka8/PyPad/blob/main/source/gui/icons/main_icon_1.png?raw=true))
+![Alt text](/posts/path/to/img.jpg "Optional title")
 
 
 # PyPad
