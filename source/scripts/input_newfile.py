@@ -14,7 +14,7 @@ class InputCreateNewFile(QDialog):
         self.mainLayout = QVBoxLayout()
         self.buttonLayout = QHBoxLayout()
 
-        self.mainLayout.addWidget(QLabel("Enter the path for the new file"), alignment=Qt.AlignmentFlag.AlignCenter)
+        self.mainLayout.addWidget(QLabel("Enter the path"), alignment=Qt.AlignmentFlag.AlignCenter)
         self.inputName = QLineEdit()
         self.mainLayout.addWidget(self.inputName)
         self.mainLayout.addLayout(self.buttonLayout)
