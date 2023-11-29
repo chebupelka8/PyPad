@@ -10,7 +10,7 @@ from scripts.load import load_style
 from scripts.constants import *
 from scripts.code_editor import CodeEditorArea
 from scripts.file_manager import FileManager
-from scripts.input_newfile import InputCreateNewFile
+from scripts.input_filename import AskInputFileName
 from scripts.menubar import MenuBar
 from scripts.run_console import ConsoleRunWorker
 from scripts.console import ConsoleEmulator
@@ -119,8 +119,8 @@ class MainWidget(QWidget):
                 self.codeArea.clear()
                 self.codeArea.insertPlainText(code)
                 self.opened_file = __path
-            except:
-                print("Unknown file.")
+            except Exception as e:
+                print(f"Unknown file. {e}")
     
     def _save_file(self):
         if self.opened_file == None: return
@@ -129,13 +129,13 @@ class MainWidget(QWidget):
             file.write(self.codeArea.toPlainText())
     
     def _open_input_newfile_dialog(self):
-        self.inputFileName = InputCreateNewFile(self)
+        self.inputFileName = AskInputFileName(self, "Enter the path for the new file")
         self.inputFileName.show()
 
         self.inputFileName.buttons.accepted.connect(lambda: self._create_new_file(self.inputFileName.getFileName()))
     
     def _open_input_newfolder_dialog(self):
-        self.inputFileName = InputCreateNewFile(self)
+        self.inputFileName = AskInputFileName(self, "Enter the path for the new folder")
         self.inputFileName.show()
 
         self.inputFileName.buttons.accepted.connect(lambda: self._create_new_folder(self.inputFileName.getFileName()))
