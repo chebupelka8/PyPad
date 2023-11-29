@@ -1,4 +1,4 @@
-![Alt text](/posts/path/to/img.jpg "Optional title")
+![Alt text](/source/gui/icons/main_icon1.png)
 
 
 # PyPad
