@@ -20,3 +20,9 @@ PyPad - is a Python code editor designed to handle Python code with features suc
 
 My GitHub - https://github.com/chebupelka8
 PyPad on GitHub - https://github.com/chebupelka8/PyPad/tree/main
+
+
+# Screenshots
+![Alt text](/screenshots/0.png)
+![Alt text](/screenshots/1.png)
+![Alt text](/screenshots/2.png)
