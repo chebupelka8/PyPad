@@ -1,4 +1,4 @@
-                                                                                                                    ![Alt text](/source/gui/icons/main_icon_1.png)
+![Alt text](/source/gui/icons/main_icon_1.png)
 
 
 # PyPad
