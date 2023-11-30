@@ -10,14 +10,14 @@ class CommandLineEditor(QLineEdit):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.com = None
+        self.command = None
     
     def enterConnect(self, __command):
-        self.com = __command
+        self.command = __command
     
     def keyPressEvent(self, event: QKeyEvent) -> None:
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-            self.com()
+            self.command()
         else:
             super().keyPressEvent(event)
 

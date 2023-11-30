@@ -60,6 +60,15 @@ class FileManager(QTreeView):
         self.trigger_file_menu()
 
         for i in range(1, 4): self.header().setSectionHidden(i, True)
+
+        # variables
+        self.opened_file = None
+    
+    def setOpenedFile(self, __path: str) -> None:
+        self.opened_file = __path
+    
+    def getOpenedFile(self) -> str:
+        return self.opened_file
     
     def trigger_file_menu(self):
         self.fileMenu.rename_file_action.triggered.connect(lambda: self._rename_file(self.fileMenu._get_current_path()))
@@ -96,7 +105,13 @@ class FileManager(QTreeView):
             self.inputName = AskInputFileName(self, "Enter path for rename the file", __path.split("/")[-1])
             self.inputName.show()
 
+            def _op():
+                self.setOpenedFile(f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}")
+                self.selectionModel().clearSelection()
+                # self.selectionModel().select(self.model.index(f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}"), QItemSelectionModel.Select)
+
             self.inputName.buttons.accepted.connect(lambda: os.rename(__path, f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}"))
+            self.inputName.buttons.accepted.connect(_op) # see up
     
     def _delete_file(self, __path: str) -> None:
         if __path == "" or __path == None: return

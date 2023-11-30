@@ -119,10 +119,14 @@ class MainWidget(QWidget):
                 self.codeArea.clear()
                 self.codeArea.insertPlainText(code)
                 self.opened_file = __path
+                self.fileManager.setOpenedFile(self.opened_file)
+            
             except Exception as e:
                 print(f"Unknown file. {e}")
     
     def _save_file(self):
+        self.opened_file = self.fileManager.getOpenedFile()
+
         if self.opened_file == None: return
 
         with open(self.opened_file, "w", encoding="utf-8") as file:
