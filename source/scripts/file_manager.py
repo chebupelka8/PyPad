@@ -93,7 +93,7 @@ class FileManager(QTreeView):
         
         if new_filename != "" and new_filename != None: os.rename(__path, new_filename)
         else:
-            self.inputName = AskInputFileName(self, "Enter path for rename the file")
+            self.inputName = AskInputFileName(self, "Enter path for rename the file", __path.split("/")[-1])
             self.inputName.show()
 
             self.inputName.buttons.accepted.connect(lambda: os.rename(__path, f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}"))

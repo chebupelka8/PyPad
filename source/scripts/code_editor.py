@@ -131,7 +131,8 @@ class CodeEditorArea(QPlainTextEdit):
             return res // 4
                 
         def _find_colons(string: str) -> int:
-            return 1 if string.rstrip()[-1] == ":" else 0
+            try: return 1 if string.rstrip()[-1] == ":" else 0
+            except: return 0
 
         if event.key() == Qt.Key.Key_ParenLeft:
             _insert(["(", ")"])
@@ -166,14 +167,17 @@ class CodeEditorArea(QPlainTextEdit):
         elif event.key() == Qt.Key.Key_Return:
         
             previous = self.toPlainText().split("\n")[cursor.blockNumber()]
-            # if previous.replace(" ", "") == "": previous = "//none" # it's need for remove exception - list has no index -1
             
             if previous == "": prev = "//none" # it's need for remove exception - list has no index -1
-            elif not previous.isspace(): prev = previous.rstrip()[-1]
+            elif not previous.isspace() and previous.replace(" ", "") != "": 
+                try: 
+                    prev = previous[:cursor.positionInBlock()].rstrip()
+                    prev[-1]
+                except IndexError: prev = "//none"
             else: prev = previous
             
             if prev[-1] == ":" or self.toPlainText().split("\n")[cursor.blockNumber()][:4] == "    ":
-                tab_count = _find_tabs(previous) + _find_colons(previous)
+                tab_count = _find_tabs(previous) + _find_colons(prev)
                 cursor.insertText("\n" + ("    " * tab_count))
             else:
                 super().keyPressEvent(event)
