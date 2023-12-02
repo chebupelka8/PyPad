@@ -142,24 +142,16 @@ class MainWidget(QWidget):
         self.inputFileName = AskInputFileName(self, "Enter the path for the new folder")
         self.inputFileName.show()
 
-        self.inputFileName.buttons.accepted.connect(lambda: self._create_new_folder(self.inputFileName.getFileName()))
+        self.inputFileName.buttons.accepted.connect(lambda: self.fileManager._create_folder(f"{self.fileManager._get_directory()}/{self.inputFileName.getFileName()}"))
     
     def _create_new_file(self, __filename: str) -> None:
+        if __filename == "" or __filename[:__filename.find(".")] == "": return 
         
         filename = f"{self.fileManager._get_directory()}/{__filename}"
-        if filename == "" or filename[:filename.find(".")] == "": return 
-
-        with open(f"{self.fileManager._get_directory()}/{__filename}", "w") as file:
-            file.write("")
         
+        self.fileManager._create_file(filename)
         self.fileManager._open_file(filename)
         self._open_file_editor(filename)
-    
-    def _create_new_folder(self, __foldername: str) -> None:
-        foldername = f"{self.fileManager._get_directory()}/{__foldername}"
-        if foldername == "": return
-
-        os.mkdir(foldername)
     
     def _run_python_file(self):
         self._save_file()

@@ -75,6 +75,8 @@ class FileManager(QTreeView):
         self.fileMenu.delete_file_action.triggered.connect(lambda: self._delete_file(self.fileMenu._get_current_path()))
         self.fileMenu.copy_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path()))
         self.fileMenu.copy_relative_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path(), relative=True))
+        self.fileMenu.create_file_action.triggered.connect(self._ask_create_file)
+        self.fileMenu.create_folder_action.triggered.connect(self._ask_create_folder)
     
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
@@ -82,8 +84,11 @@ class FileManager(QTreeView):
         if event.button() == Qt.MouseButton.RightButton:
             self.fileMenu.clear()
             
+            
             self.fileMenu.setup_ui(self._get_path(self.indexAt(event.pos())))
             self.trigger_file_menu()
+            if len(self._get_path(self.indexAt(event.pos()))) == 0: self.fileMenu.current_path = self._get_directory()
+            
             self.fileMenu.move(QCursor.pos())
             self.fileMenu.show()
     
@@ -105,13 +110,8 @@ class FileManager(QTreeView):
             self.inputName = AskInputFileName(self, "Enter path for rename the file", __path.split("/")[-1])
             self.inputName.show()
 
-            def _op():
-                self.setOpenedFile(f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}")
-                self.selectionModel().clearSelection()
-                # self.selectionModel().select(self.model.index(f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}"), QItemSelectionModel.Select)
-
             self.inputName.buttons.accepted.connect(lambda: os.rename(__path, f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}"))
-            self.inputName.buttons.accepted.connect(_op) # see up
+            self.inputName.buttons.accepted.connect(lambda: self.setOpenedFile(f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}")) # see up
     
     def _delete_file(self, __path: str) -> None:
         if __path == "" or __path == None: return
@@ -144,3 +144,32 @@ class FileManager(QTreeView):
         self.selectionModel().select(self.model.index(__path_to_file), QItemSelectionModel.Select) # select opened file
 
         return __path_to_file if __path_to_file != "" else None
+    
+    def _create_file(self, __filename: str = None) -> None:
+        if __filename == None or __filename == "": return
+
+        with open(__filename, "w", encoding="utf-8") as file:
+            file.write("")
+        
+    def _create_folder(self, __foldername: str = None) -> None:
+        if __foldername == "" or __foldername == None: return
+
+        os.mkdir(__foldername)
+    
+    def _open_dialog(self, title: str, placed_text: str, *accept_commands):
+        self.inputFileName = AskInputFileName(self, title, placed_text)
+        self.inputFileName.show()
+
+        for com in accept_commands: self.inputFileName.buttons.accepted.connect(com)
+    
+    def _ask_create_file(self):
+        self.inputFileName = AskInputFileName(self, "Enter path for the new file")
+        self.inputFileName.show()
+
+        self.inputFileName.buttons.accepted.connect(lambda: self._create_file(f"{self.fileMenu._get_current_path()}/{self.inputFileName.getFileName()}"))
+    
+    def _ask_create_folder(self):
+        self.inputFileName = AskInputFileName(self, "Enter path for the new folder")
+        self.inputFileName.show()
+
+        self.inputFileName.buttons.accepted.connect(lambda: self._create_folder(f"{self.fileMenu._get_current_path()}/{self.inputFileName.getFileName()}"))
