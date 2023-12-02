@@ -17,19 +17,20 @@ class FileManagerMenu(QMenu):
 
     def setup_ui(self, __path: str = ""):
         
-        self.create_file_action = QAction("New File", self)
+        self.create_file_action = QAction("Create New File", self)
         self.addAction(self.create_file_action)
 
-        self.create_folder_action = QAction("New Folder", self)
+        self.create_folder_action = QAction("Create New Folder", self)
         self.addAction(self.create_folder_action)
 
         self.rename_file_action = QAction("Rename File", self)
-        self.delete_file_action = QAction("Delete File", self)
+        self.delete_file_action = QAction("Delete", self)
         self.copy_path_action = QAction("Copy Path", self)
         self.copy_relative_path_action = QAction("Copy Relative Path", self)
 
         if __path != "":
             self.current_path = __path
+            if os.path.isfile(self.current_path): self.current_path = "/".join(self.current_path.split("/")[:-1])
 
             self.addSeparator()
 
@@ -43,6 +44,9 @@ class FileManagerMenu(QMenu):
     
     def _get_current_path(self) -> str:
         return self.current_path
+
+    def _set_current_path(self, __new_path: str) -> None:
+        self.current_path = __new_path
 
 
 class FileManager(QTreeView):
@@ -87,7 +91,7 @@ class FileManager(QTreeView):
             
             self.fileMenu.setup_ui(self._get_path(self.indexAt(event.pos())))
             self.trigger_file_menu()
-            if len(self._get_path(self.indexAt(event.pos()))) == 0: self.fileMenu.current_path = self._get_directory()
+            if len(self._get_path(self.indexAt(event.pos()))) == 0: self.fileMenu._set_current_path(self._get_directory())
             
             self.fileMenu.move(QCursor.pos())
             self.fileMenu.show()
