@@ -15,7 +15,7 @@ QWidget#main-widget {
 QPlainTextEdit {
     padding: 5px;
     border-radius: 7px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid #3e3d3d;
     min-height: 1000px;
     min-width: 1000px;
 }

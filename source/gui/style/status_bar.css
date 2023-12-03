@@ -6,7 +6,7 @@
 }
 
 QFrame#status-bar {
-    border: 1px solid rgba(255, 255, 255, .2);
+    border: 2px solid #3e3d3d;
     border-radius: 7px;
 }
 
