@@ -4,6 +4,7 @@ from PySide6.QtCore import QRunnable, Qt
 from scripts.load import load_style
 import subprocess, os
 from typing import Any
+from scripts.constants import theme
 
 
 class CommandLineEditor(QLineEdit):
@@ -26,10 +27,10 @@ class ConsoleEmulator(QWidget, QRunnable):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self.setStyleSheet(load_style("source/gui/style/console_emulator.css"))
         self.setObjectName("console-widget")
         self.setWindowTitle("Console")
         self.setWindowIcon(QIcon("source/gui/icons/main_icon_1.png"))
+        self.setStyleSheet(load_style("source/gui/style/console_emulator.css") + "QWidget#console-widget {" + f"background-color: {theme["workbench.colorCustomization"]["background-color"]}" + "}")
 
         self.mainLayout = QVBoxLayout()
 
