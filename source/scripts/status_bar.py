@@ -12,7 +12,7 @@ class StatusBar(QFrame):
         self.setObjectName("status-bar")
         self.setAutoFillBackground(True)
         self.setFrameStyle(QFrame.Panel | QFrame.Plain)
-        self.setFixedHeight(35)
+        self.setFixedHeight(40)
 
         self.mainLayout = QHBoxLayout()
         self.mainLayout.setSpacing(0)
