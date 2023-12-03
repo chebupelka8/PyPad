@@ -30,8 +30,8 @@ class CodeEditorArea(QPlainTextEdit):
         self.setStyleSheet(
             f"""
             font-size: {data["workbench.settingsCustomization"]["editor.fontSize"]}px;
-            color: {theme["workbench.theme.colorCustomization"]["editor.syntaxHighlighterCustomization"]["-default"]["color"]};
-            background-color: {theme["workbench.theme.colorCustomization"]["editor.background"]};
+            color: {theme["workbench.colorCustomization"]["editor.syntaxHighlighterCustomization"]["-default"]["color"]};
+            background-color: {theme["workbench.colorCustomization"]["editor"]["background-color"]};
             font-family: '{data["workbench.settingsCustomization"]["editor.fontFamily"]}';
             """
         )
@@ -48,7 +48,7 @@ class CodeEditorArea(QPlainTextEdit):
         if not self.isReadOnly() and self.hasFocus():
             selection = QTextEdit.ExtraSelection()
 
-            lineColor = QColor("#1A1A1A").lighter(180)
+            lineColor = QColor(theme["workbench.colorCustomization"]["editor"]["current-line-color"])
 
             selection.format.setBackground(lineColor)
             selection.format.setProperty(QTextFormat.FullWidthSelection, True)

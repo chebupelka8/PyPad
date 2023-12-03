@@ -27,7 +27,9 @@ class MainWidget(QWidget):
         self.setWindowTitle("PyPad")
         self.setWindowIcon(QIcon("source/gui/icons/main_icon_1.png"))
         self.setObjectName("main-widget")
-        self.setStyleSheet(load_style("source/gui/style/style.css"))
+        self.setStyleSheet(
+            load_style("source/gui/style/style.css") + "QWidget#main-widget {" + f"background-color: {theme["workbench.colorCustomization"]["background-color"]}" + "}"
+        )
     
         self.call_layouts()
         self.setup_ui()

@@ -4,6 +4,7 @@ from PySide6.QtGui import QAction, QCursor
 from scripts.load import load_style
 from scripts.input_filename import AskInputFileName
 import os, pyperclip
+from scripts.constants import theme
 
 
 class FileManagerMenu(QMenu):
@@ -53,7 +54,7 @@ class FileManager(QTreeView):
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
 
-        self.setStyleSheet(load_style("source/gui/style/file_manager.css"))
+        self.setStyleSheet(load_style("source/gui/style/file_manager.css") + "QTreeView {" + f"background-color: {theme["workbench.colorCustomization"]["file-manager"]["background-color"]}" + "}")
         self.model = QFileSystemModel()
         self.model.setRootPath("")
         self.setModel(self.model)

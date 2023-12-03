@@ -5,7 +5,7 @@ from scripts.window_hint import WindowHint
 
 def set_text_char_format(form: str):
     with open("source/gui/themes/pyPad_theme.json", "r") as file:
-        theme = json.load(file)["workbench.theme.colorCustomization"]["editor.syntaxHighlighterCustomization"][form]
+        theme = json.load(file)["workbench.colorCustomization"]["editor.syntaxHighlighterCustomization"][form]
         file.close()
 
     format_ = QTextCharFormat()

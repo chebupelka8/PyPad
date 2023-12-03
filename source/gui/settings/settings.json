@@ -1,6 +1,5 @@
 {
     "workbench.settingsCustomization": {
-        "fontFamily": "Cascadia code",
         "editor.fontFamily": "Cascadia code",
         "editor.fontSize": 22,
         "editor.cursorStyle": "block"

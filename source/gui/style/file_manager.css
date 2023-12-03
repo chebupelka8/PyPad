@@ -6,9 +6,8 @@
 }
 
 QTreeView {
-    color: #fbf1c7;
+    color: white;
     font-size: 16px;
-    background-color: #1d2021;
     border: 1px solid rgba(255, 255, 255, 0.2);
     min-width: 400px;
     max-width: 600px;

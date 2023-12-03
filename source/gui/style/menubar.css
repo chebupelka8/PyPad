@@ -9,7 +9,7 @@
 /*      QMENUBAR      */
 QMenuBar {
     background-color: #1d2021;
-    color: #fbf1c7;
+    color: white;
     font-size: 16px;
 }
 
@@ -29,7 +29,7 @@ QMenuBar::item:selected {
 /*      QMENU      */
 QMenu {
     background-color: #1d2021;
-    color: #fbf1c7;
+    color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
     min-width: 60px;
 }

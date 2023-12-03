@@ -1,13 +1,14 @@
 from PySide6.QtWidgets import QMenuBar, QMenu
 from PySide6.QtGui import QAction
 from scripts.load import load_style
+from scripts.constants import theme
 
 
 class MenuBar(QMenuBar):
     def __init__(self, parent) -> None:
         super().__init__(parent)
 
-        self.setStyleSheet(load_style("source/gui/style/menubar.css"))
+        self.setStyleSheet(load_style("source/gui/style/menubar.css") + "QMenuBar {" + f"background-color: {theme["workbench.colorCustomization"]["menu-bar"]["background-color"]}" + "}")
 
         # create "File" menu
         self.file_menu = QMenu("File", self)
