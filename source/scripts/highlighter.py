@@ -1,18 +1,17 @@
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont, QColor
-import re, json
+import re
 from scripts.window_hint import WindowHint
+from scripts.constants import theme
 
 
 def set_text_char_format(form: str):
-    with open("source/gui/themes/pyPad_theme.json", "r") as file:
-        theme = json.load(file)["workbench.colorCustomization"]["editor.syntaxHighlighterCustomization"][form]
-        file.close()
+    data = theme["workbench.colorCustomization"]["editor.syntaxHighlighterCustomization"][form]
 
     format_ = QTextCharFormat()
-    format_.setForeground(QColor(theme["color"]))
-    format_.setFontItalic(theme["font"]["italic"])
-    format_.setFontUnderline(theme["font"]["underline"])
-    if theme["font"]["bold"]: format_.setFontWeight(QFont.Bold)
+    format_.setForeground(QColor(data["color"]))
+    format_.setFontItalic(data["font"]["italic"])
+    format_.setFontUnderline(data["font"]["underline"])
+    if data["font"]["bold"]: format_.setFontWeight(QFont.Bold)
     
     return format_
 
@@ -48,8 +47,8 @@ class Highlighter(QSyntaxHighlighter):
         # print("************\n" + self.plainText + "\n************")
         self._highlight_match(r"^\s*class .*", self.classes_format, text)
         self._highlight_match(r"^\s*def \w*\(.*\).*:", self.defindfunc_format, text)
-        self._highlight_match(r"\b(for|while|if|in|elif|else|or|and|import|from|class|def|return|try|except|break|continue|with|global|nonlocal|not|raise|yeild|is|pass|as)\b", self.keyword_format, text)
-        self._highlight_match(r"\b(divmod|map|filter|zip|super|open|help|hex|abs|eval|exec|ord|chr|sorted|reversed|enumerate|range|sum|repr|round|type)\b", self.function_format, text)
+        self._highlight_match(r"\b(and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)\b", self.keyword_format, text)
+        self._highlight_match(r"\b(divmod|map|filter|zip|super|open|help|hex|abs|eval|exec|ord|chr|sorted|reversed|enumerate|range|sum|repr|round|type|all|any)\b", self.function_format, text)
         self._highlight_match(r"\b(True|False|None)\b", self.logical_format, text)
         self._highlight_match(r"\b(int|float|str|dict|set|tuple|list|bool)\b", self.data_types_format, text)
         self._highlight_match(r"\(|\)|\[|\]|\{|\}", self.brackets_format, text)

@@ -20,7 +20,7 @@ class CodeEditorArea(QPlainTextEdit):
         self._updateCursorWidth()
         if data["workbench.settingsCustomization"]["editor.cursorStyle"] == "block":
             self.cursorPositionChanged.connect(self._highlightCurrentLine)
-            self.blockCountChanged.connect(self._updateCursorWidth)
+            self.cursorPositionChanged.connect(self._updateCursorWidth)
         else:
             self.setCursorWidth(1)
         self.cursorPositionChanged.connect(self._updateCurrentLine)

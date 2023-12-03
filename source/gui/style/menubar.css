@@ -14,7 +14,6 @@ QMenuBar {
 }
 
 QMenuBar::item {
-    background-color: #1d2021;
     padding: 4px 10px;
     border: none;
     border-radius: 8px;
@@ -35,7 +34,6 @@ QMenu {
 }
 
 QMenu::item {
-    background-color: #1d2021;
     padding: 4px 20px;
     border-radius: 6px;
 }
