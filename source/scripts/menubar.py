@@ -8,7 +8,10 @@ class MenuBar(QMenuBar):
     def __init__(self, parent) -> None:
         super().__init__(parent)
 
-        self.setStyleSheet(load_style("source/gui/style/menubar.css") + "QMenuBar {" + f"background-color: {theme["workbench.colorCustomization"]["menu-bar"]["background-color"]}" + "}")
+        self.setStyleSheet(
+            load_style("source/gui/style/menubar.css") + 
+            "QMenuBar {" + f"background-color: {theme["workbench.colorCustomization"]["menu-bar"]["background-color"]}" + "}"
+        )
 
         # create "File" menu
         self.file_menu = QMenu("File", self)

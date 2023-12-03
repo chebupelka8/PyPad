@@ -16,7 +16,7 @@ class FileManagerMenu(QMenu):
 
         self.setup_ui()
 
-    def setup_ui(self, __path: str = ""):
+    def setup_ui(self):
         
         self.create_file_action = QAction("Create New File", self)
         self.addAction(self.create_file_action)
@@ -29,9 +29,7 @@ class FileManagerMenu(QMenu):
         self.copy_path_action = QAction("Copy Path", self)
         self.copy_relative_path_action = QAction("Copy Relative Path", self)
 
-        if __path != "":
-            self.current_path = __path
-            if os.path.isfile(self.current_path): self.current_path = "/".join(self.current_path.split("/")[:-1])
+        if self.current_path != "" and self.current_path != None:
 
             self.addSeparator()
 
@@ -43,8 +41,9 @@ class FileManagerMenu(QMenu):
             self.addAction(self.copy_path_action)
             self.addAction(self.copy_relative_path_action)
     
-    def _get_current_path(self) -> str:
-        return self.current_path
+    def _get_current_path(self, check: bool = False) -> str:
+        if check: return self.current_path if not os.path.isfile(self.current_path) else "/".join(self.current_path.split("/")[:-1])
+        else: return self.current_path
 
     def _set_current_path(self, __new_path: str) -> None:
         self.current_path = __new_path
@@ -90,7 +89,8 @@ class FileManager(QTreeView):
             self.fileMenu.clear()
             
             
-            self.fileMenu.setup_ui(self._get_path(self.indexAt(event.pos())))
+            self.fileMenu._set_current_path(self._get_path(self.indexAt(event.pos())))
+            self.fileMenu.setup_ui()
             self.trigger_file_menu()
             if len(self._get_path(self.indexAt(event.pos()))) == 0: self.fileMenu._set_current_path(self._get_directory())
             
@@ -171,10 +171,10 @@ class FileManager(QTreeView):
         self.inputFileName = AskInputFileName(self, "Enter path for the new file")
         self.inputFileName.show()
 
-        self.inputFileName.buttons.accepted.connect(lambda: self._create_file(f"{self.fileMenu._get_current_path()}/{self.inputFileName.getFileName()}"))
+        self.inputFileName.buttons.accepted.connect(lambda: self._create_file(f"{self.fileMenu._get_current_path(True)}/{self.inputFileName.getFileName()}"))
     
     def _ask_create_folder(self):
         self.inputFileName = AskInputFileName(self, "Enter path for the new folder")
         self.inputFileName.show()
 
-        self.inputFileName.buttons.accepted.connect(lambda: self._create_folder(f"{self.fileMenu._get_current_path()}/{self.inputFileName.getFileName()}"))
+        self.inputFileName.buttons.accepted.connect(lambda: self._create_folder(f"{self.fileMenu._get_current_path(True)}/{self.inputFileName.getFileName()}"))
