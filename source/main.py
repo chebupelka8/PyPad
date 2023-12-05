@@ -72,17 +72,17 @@ class MainWidget(QWidget):
             self.menu_bar.copy_edit_action.triggered.connect(self.tabEditor.currentWidget().copy)
             self.menu_bar.paste_edit_action.triggered.connect(self.tabEditor.currentWidget().paste)
             self.menu_bar.select_all_edit_action.triggered.connect(self.tabEditor.currentWidget().selectAll)
-        except: pass
+        except AttributeError: pass
 
         try: 
             self.statusBar._setCurrentPos([str(i) for i in self.tabEditor.currentWidget().getCursorPosition()])
             self.tabEditor.currentWidget().cursorPositionChanged.connect(lambda: self.statusBar._setCurrentPos([str(i) for i in self.tabEditor.currentWidget().getCursorPosition()]))
-        except: pass
+        except AttributeError: pass
 
         try: 
             self.opened_file = self.tabEditor.currentWidget().getCurrentPath()
             self.fileManager.setOpenedFile(self.tabEditor.currentWidget().getCurrentPath())
-        except: pass
+        except AttributeError: pass
 
     def create_menu_bar(self):
         self.menu_bar = MenuBar(self)

@@ -76,7 +76,8 @@ class CodeEditorArea(QPlainTextEdit):
     
     def _find_last_word(self) -> str:
         cursor = self.textCursor()
-        dt = self.toPlainText().split("\n")[self.currentLine][:cursor.positionInBlock()]
+        try: dt = self.toPlainText().split("\n")[self.currentLine][:cursor.positionInBlock()]
+        except IndexError: pass
         
         return dt.split(" ")[-1]
     
