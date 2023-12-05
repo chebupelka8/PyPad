@@ -26,6 +26,6 @@ PyPad on GitHub - https://github.com/chebupelka8/PyPad/tree/main
 
 
 # Screenshots
-![Alt text](/screenshots/0.png)
-![Alt text](/screenshots/2.png)
-![Alt text](/screenshots/4.png)
+![Alt text](/screenshots1/0.png)
+![Alt text](/screenshots1/2.png)
+![Alt text](/screenshots1/4.png)
