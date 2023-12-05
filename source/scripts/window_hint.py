@@ -1,8 +1,9 @@
-from PySide6.QtWidgets import QLabel, QWidget, QVBoxLayout
+from PySide6.QtWidgets import QLabel, QWidget, QVBoxLayout, QListWidget
 from PySide6.QtCore import Qt
+from scripts.constants import keywords
 
 
-class WindowHint(QWidget):
+class WindowHint1(QWidget):
     def __init__(self, hints: list):
         super(WindowHint, self).__init__()
 
@@ -29,4 +30,30 @@ class WindowHint(QWidget):
                 widget.deleteLater()
 
 
+
+class WindowHint(QWidget):
+    def __init__(self, parent) -> None:
+        super(WindowHint, self).__init__(parent, Qt.WindowType.FramelessWindowHint)
+
+        self.mainLayout = QVBoxLayout()
+        self.setLayout(self.mainLayout)
+
+        self.listWidget = QListWidget()
+        self.mainLayout.addWidget(self.listWidget)
+
+    def _set_hints(self, hints: list):
+        self.listWidget.clear()
+        self.listWidget.addItems(hints)
+    
+    def _get_hints(self) -> list:
+        return self.listWidget.count()
+
+    def _find_matches(self, text: str) -> list[str]:
+        if text.replace(" ", "") == "": return []
         
+        result = []
+
+        for match in keywords:
+            if match.find(text) != -1: result.append(match)
+        
+        return result

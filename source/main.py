@@ -16,6 +16,7 @@ from scripts.run_console import ConsoleRunWorker
 from scripts.console import ConsoleEmulator
 from scripts.welcome_page import WelcomePage
 from scripts.status_bar import StatusBar
+from scripts.tab_editor import TabEditorArea
 import sys, os
 
 
@@ -41,6 +42,8 @@ class MainWidget(QWidget):
         # variables 
         self.thread_pool = QThreadPool()
         self.opened_file = None # current file (opened in editor)
+
+        self._update()
     
     def call_layouts(self):
         self.mainLayout = QVBoxLayout()
@@ -49,38 +52,49 @@ class MainWidget(QWidget):
         
         self.mainLayout.addLayout(self.codeLayout)
         self.mainLayout.addLayout(self.sideBarLayout)
-
-    def create_menu_bar(self):
-        self.menu_bar = MenuBar(self)
-
+    
+    def _update(self):
+        # retrigger menubar
+        self.menu_bar.clear()
+        self.create_menu_bar()
         self.menu_bar.new_file_action.triggered.connect(self._open_input_newfile_dialog)
         self.menu_bar.new_folder_action.triggered.connect(self._open_input_newfolder_dialog)
         self.menu_bar.open_file_action.triggered.connect(self._open_file)
         self.menu_bar.open_folder_action.triggered.connect(lambda: self.fileManager._open_folder())
         self.menu_bar.save_file_action.triggered.connect(self._save_file)
-        self.menu_bar.undo_edit_action.triggered.connect(self.codeArea.undo)
-        self.menu_bar.redo_edit_action.triggered.connect(self.codeArea.redo)
-        self.menu_bar.cut_edit_action.triggered.connect(self.codeArea.cut)
-        self.menu_bar.copy_edit_action.triggered.connect(self.codeArea.copy)
-        self.menu_bar.paste_edit_action.triggered.connect(self.codeArea.paste)
-        self.menu_bar.select_all_edit_action.triggered.connect(self.codeArea.selectAll)
         self.menu_bar.run_file_action.triggered.connect(self._run_python_file)
         self.menu_bar.run_in_console_action.triggered.connect(self._run_console)
         self.menu_bar.launch_console.triggered.connect(self.consoleEmulator.show)
-        
+        try:
+            self.menu_bar.undo_edit_action.triggered.connect(self.tabEditor.currentWidget().undo)
+            self.menu_bar.redo_edit_action.triggered.connect(self.tabEditor.currentWidget().redo)
+            self.menu_bar.cut_edit_action.triggered.connect(self.tabEditor.currentWidget().cut)
+            self.menu_bar.copy_edit_action.triggered.connect(self.tabEditor.currentWidget().copy)
+            self.menu_bar.paste_edit_action.triggered.connect(self.tabEditor.currentWidget().paste)
+            self.menu_bar.select_all_edit_action.triggered.connect(self.tabEditor.currentWidget().selectAll)
+        except: pass
+
+        try: 
+            self.statusBar._setCurrentPos([str(i) for i in self.tabEditor.currentWidget().getCursorPosition()])
+            self.tabEditor.currentWidget().cursorPositionChanged.connect(lambda: self.statusBar._setCurrentPos([str(i) for i in self.tabEditor.currentWidget().getCursorPosition()]))
+        except: pass
+
+        try: 
+            self.opened_file = self.tabEditor.currentWidget().getCurrentPath()
+            self.fileManager.setOpenedFile(self.tabEditor.currentWidget().getCurrentPath())
+        except: pass
+
+    def create_menu_bar(self):
+        self.menu_bar = MenuBar(self)
         self.mainLayout.setMenuBar(self.menu_bar)
     
     def setup_ui(self):
-        # editor set up
-        self.codeArea = CodeEditorArea(self)
-        self.codeArea.setVisible(False)
+        # tab widget setup
+        self.tabEditor = TabEditorArea(self)
+        self.tabEditor.currentChanged.connect(self._update)
 
         # console set up
         self.consoleEmulator = ConsoleEmulator()
-
-        # welcome setup
-        self.welcomePage = WelcomePage(self)
-        self.welcomePage.setVisible(True)
 
         # file manager set up
         self.fileManager = FileManager()
@@ -88,12 +102,10 @@ class MainWidget(QWidget):
 
         # side bar set up
         self.statusBar = StatusBar(self)
-        self.codeArea.cursorPositionChanged.connect(lambda: self.statusBar._setCurrentPos([str(i) for i in self.codeArea.getCursorPosition()]))
 
         # add Widgets to layouts
         self.codeLayout.addWidget(self.fileManager, stretch=4)
-        self.codeLayout.addWidget(self.codeArea, stretch=9)
-        self.codeLayout.addWidget(self.welcomePage, stretch=9)
+        self.codeLayout.addWidget(self.tabEditor, stretch=9)
         self.sideBarLayout.addWidget(self.statusBar)
     
     def closeEvent(self, event: QCloseEvent) -> None:
@@ -115,13 +127,11 @@ class MainWidget(QWidget):
                 with open(__path, "r", encoding="utf-8") as file:
                     code = file.read()
                 
-                self.welcomePage.setVisible(False)
-                self.codeArea.setVisible(True)
-                
-                self.codeArea.clear()
-                self.codeArea.insertPlainText(code)
                 self.opened_file = __path
                 self.fileManager.setOpenedFile(self.opened_file)
+                self.tabEditor._add_editor(__path.split("/")[-1], code, __path)
+                
+                self._update()
             
             except Exception as e:
                 print(f"Unknown file. {e}")
@@ -132,7 +142,7 @@ class MainWidget(QWidget):
         if self.opened_file == None: return
 
         with open(self.opened_file, "w", encoding="utf-8") as file:
-            file.write(self.codeArea.toPlainText())
+            file.write(self.tabEditor.currentWidget().toPlainText())
     
     def _open_input_newfile_dialog(self):
         self.inputFileName = AskInputFileName(self, "Enter the path for the new file")

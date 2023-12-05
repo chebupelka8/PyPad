@@ -8,6 +8,7 @@ from PySide6.QtGui import (
 from PySide6.QtCore import Qt
 from scripts.highlighter import Highlighter
 from scripts.constants import data, theme
+from scripts.window_hint import WindowHint
 
 
 class CodeEditorArea(QPlainTextEdit):
@@ -39,8 +40,45 @@ class CodeEditorArea(QPlainTextEdit):
             QFontMetrics(QFont(data["workbench.settingsCustomization"]["editor.fontFamily"], int(data["workbench.settingsCustomization"]["editor.fontSize"]))).horizontalAdvance('    ') - 15
         )
 
+        self.windowHint = WindowHint(self)
+        self.windowHint.show()
+        self.windowHint.setVisible(False)
+        self.windowHint.listWidget.clicked.connect(self._append_hint)
+        self.cursorPositionChanged.connect(self._show_hints)
+        self.textChanged.connect(self._show_hints)
+
         # variables 
         self.currentLine = None
+        self.currentPath = None
+    
+    def setCurrentPath(self, __path: str) -> None:
+        self.currentPath = __path
+    
+    def getCurrentPath(self) -> str:
+        return self.currentPath
+    
+    def _append_hint(self, index):
+        word = self.windowHint.listWidget.itemFromIndex(index).text()
+
+        text = self.toPlainText().split("\n")
+        text[self.currentLine] = text[self.currentLine].replace(self._find_last_word(), "")
+        self.setPlainText("\n".join(text))
+
+        self.insertPlainText(word)
+        self.windowHint.setVisible(False)
+    
+    def _show_hints(self):
+        try: self.windowHint._set_hints(self.windowHint._find_matches(self._find_last_word()))
+        except TypeError: return
+        
+        if self.windowHint._get_hints() == 0: self.windowHint.setVisible(False)
+        else: self.windowHint.setVisible(False)
+    
+    def _find_last_word(self) -> str:
+        cursor = self.textCursor()
+        dt = self.toPlainText().split("\n")[self.currentLine][:cursor.positionInBlock()]
+        
+        return dt.split(" ")[-1]
     
     def _highlightCurrentLine(self):
         extraSelections = []

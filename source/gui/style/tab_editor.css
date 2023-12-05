@@ -1,0 +1,20 @@
+@import url('https://fonts.cdnfonts.com/css/cascadia-code');
+
+
+* {
+    color: white;
+    font-family: 'Cascadia Code', sans-serif;
+}
+
+QTabWidget {
+    background-color: #1d2021;
+    border: 2px solid #3e3d3d;
+    min-width: 1000px;
+    min-height: 1000px;
+}
+
+QTabWidget::pane {
+    background-color: #1d2021;
+    border: 2px solid #3e3d3d;
+    border-radius: 7px;
+}

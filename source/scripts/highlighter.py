@@ -1,6 +1,5 @@
 from PySide6.QtGui import QSyntaxHighlighter, QTextCharFormat, QFont, QColor
 import re
-from scripts.window_hint import WindowHint
 from scripts.constants import theme
 
 
@@ -37,9 +36,6 @@ class Highlighter(QSyntaxHighlighter):
         self.defindfunc_format = set_text_char_format("-defindfunc")
 
         self.syntax_words = []
-
-        self.window_hint = WindowHint(self.syntax_words)
-        # self.window_hint.show()
 
     def highlightBlock(self, text):
 
