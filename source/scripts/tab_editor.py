@@ -58,3 +58,11 @@ class TabEditorArea(QTabWidget):
                 pass
         
         return index
+
+    def _get_editor_widgets(self) -> list[list[CodeEditorArea, int]]:
+        res = []
+
+        for w in range(self.count()):
+            if isinstance(self.widget(w), CodeEditorArea): res.append([self.widget(w), w])
+        
+        return res

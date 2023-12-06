@@ -3,14 +3,17 @@ from PySide6.QtCore import Qt
 from scripts.load import load_style
 from PySide6.QtGui import QPixmap
 from scripts.vector import Vec2
+from scripts.constants import theme
 
 
 class WelcomePage(QWidget):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.setStyleSheet(load_style("source/gui/style/welcome_page.css"))
         self.setObjectName("welcome-page")
+        self.setStyleSheet(
+            load_style("source/gui/style/welcome_page.css")
+        )
 
         self.mainLayout = QVBoxLayout()
         

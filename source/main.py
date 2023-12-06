@@ -89,6 +89,8 @@ class MainWidget(QWidget):
             self.fileManager.selectionModel().setCurrentIndex(self.fileManager.model.index(self.tabEditor.currentWidget().getCurrentPath()), QItemSelectionModel.Select)
         except AttributeError: pass
 
+        for widget, index in self.tabEditor._get_editor_widgets():
+            if not os.path.exists(widget.getCurrentPath()): self.tabEditor.removeTab(index)
 
     def create_menu_bar(self):
         self.menu_bar = MenuBar(self)
@@ -105,6 +107,8 @@ class MainWidget(QWidget):
         # file manager set up
         self.fileManager = FileManager()
         self.fileManager.clicked.connect(lambda index: self._open_file_editor(self.fileManager._get_path(index)))
+        self.fileManager.setUpdateFunction(self._update)
+        # self.fileManager.fileMenu.rename_file_action.triggered.connect()
 
         # side bar set up
         self.statusBar = StatusBar(self)
@@ -127,7 +131,6 @@ class MainWidget(QWidget):
         if f != None: self._open_file_editor(f)
     
     def _open_file_editor(self, __path: str):
-
         if os.path.isfile(__path):
             try:
                 with open(__path, "r", encoding="utf-8") as file:

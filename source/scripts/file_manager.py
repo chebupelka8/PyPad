@@ -60,6 +60,7 @@ class FileManager(QTreeView):
         self.setRootIndex(self.model.index(""))
         self.setHeaderHidden(True)
 
+
         self.fileMenu = FileManagerMenu(self)
         self.trigger_file_menu()
 
@@ -67,12 +68,16 @@ class FileManager(QTreeView):
 
         # variables
         self.opened_file = None
+        self.update_function = lambda: None
     
     def setOpenedFile(self, __path: str) -> None:
         self.opened_file = __path
     
     def getOpenedFile(self) -> str:
         return self.opened_file
+
+    def setUpdateFunction(self, func: object) -> None:
+        self.update_function = func
     
     def trigger_file_menu(self):
         self.fileMenu.rename_file_action.triggered.connect(lambda: self._rename_file(self.fileMenu._get_current_path()))
@@ -86,8 +91,8 @@ class FileManager(QTreeView):
         super().mousePressEvent(event)
 
         if event.button() == Qt.MouseButton.RightButton:
+            # self.openPersistentEditor(self.indexAt(event.pos()))
             self.fileMenu.clear()
-            
             
             self.fileMenu._set_current_path(self._get_path(self.indexAt(event.pos())))
             self.fileMenu.setup_ui()
@@ -117,11 +122,16 @@ class FileManager(QTreeView):
 
             self.inputName.buttons.accepted.connect(lambda: os.rename(__path, f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}"))
             self.inputName.buttons.accepted.connect(lambda: self.setOpenedFile(f"{"/".join(__path.split("/")[:-1])}/{self.inputName.getFileName()}")) # see up
+            self.inputName.buttons.accepted.connect(self.update_function)
+
+        self.update_function()
     
     def _delete_file(self, __path: str) -> None:
         if __path == "" or __path == None: return
 
         os.remove(__path)
+
+        self.update_function()
     
     def _copy_path(self, __path: str, relative: bool = False) -> None:
         if __path == "" or __path == None: return
@@ -138,7 +148,7 @@ class FileManager(QTreeView):
 
         return __path if __path != "" else None
     
-    def _open_file(self, __path_to_file: str = None) -> None | str:
+    def _open_file(self, __path_to_file: str) -> None | str:
         if __path_to_file == None or not isinstance(__path_to_file, str): __path_to_file = QFileDialog.getOpenFileName()[0]
         if __path_to_file == "": return
 

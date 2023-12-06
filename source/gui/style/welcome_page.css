@@ -6,7 +6,6 @@
 }
 
 QWidget#welcome-page {
-    background-color: #1d2021;
     padding: 5px;
     min-height: 1000px;
     min-width: 1000px;
@@ -14,6 +13,6 @@ QWidget#welcome-page {
 
 QLabel {
     font-size: 40px;
-    color: rgba(255, 255, 255, 0.8);
+    color: white
     /* background-color: black; */
 }
