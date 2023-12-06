@@ -130,9 +130,7 @@ class MainWidget(QWidget):
                 self.opened_file = __path
                 self.fileManager.setOpenedFile(self.opened_file)
                 self.tabEditor._add_editor(__path.split("/")[-1], code, __path)
-                # print(self.tabEditor._get_index_by_name(__path.split("/")[-1]))
-                self.tabEditor.setCurrentIndex(self.tabEditor._get_index_by_name(__path.split("/")[-1]))
-                # self.tabEditor.setTabEnabled(self.tabEditor._get_index_by_name(__path.split("/")[-1]), True)
+                self.tabEditor.setCurrentIndex(self.tabEditor._get_index_by_full_path(__path))
                 
                 self._update()
             

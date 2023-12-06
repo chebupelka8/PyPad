@@ -17,7 +17,19 @@ class TabEditorArea(QTabWidget):
         self.codeArea.insertPlainText(__text)
         self.codeArea.setCurrentPath(full_path)
 
-        if self._get_count_by_name(__name) == None: self.addTab(self.codeArea, __name)
+        if self._get_by_full_path(full_path) == None: self.addTab(self.codeArea, __name)
+        # self.addTab(self.codeArea, __name)
+    
+    def _get_by_full_path(self, __path: str) -> int | None:
+        res = 0
+        
+        for w in range(self.count()):
+            try: 
+                if self.widget(w).getCurrentPath() == __path: res += 1
+            except: 
+                pass
+        
+        return res if res != 0 else None
     
     def _get_count_by_name(self, __name) -> int | None:
         res = 0
@@ -32,5 +44,16 @@ class TabEditorArea(QTabWidget):
 
         for w in range(self.count()):
             if __name == self.tabText(w): index = self.indexOf(self.widget(w))
+        
+        return index
+
+    def _get_index_by_full_path(self, __path: str) -> int | None:
+        index = None
+
+        for w in range(self.count()):
+            try:
+                if __path == self.widget(w).getCurrentPath(): index = self.indexOf(self.widget(w))
+            except:
+                pass
         
         return index

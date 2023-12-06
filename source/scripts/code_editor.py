@@ -76,10 +76,10 @@ class CodeEditorArea(QPlainTextEdit):
     
     def _find_last_word(self) -> str:
         cursor = self.textCursor()
-        try: dt = self.toPlainText().split("\n")[self.currentLine][:cursor.positionInBlock()]
-        except IndexError: pass
-        
-        return dt.split(" ")[-1]
+        try: 
+            dt = self.toPlainText().split("\n")[self.currentLine][:cursor.positionInBlock()]
+            return dt.split(" ")[-1]
+        except IndexError: pass 
     
     def _highlightCurrentLine(self):
         extraSelections = []
