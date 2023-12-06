@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import (
     QCloseEvent, QIcon
 )
-from PySide6.QtCore import Qt, QThreadPool
+from PySide6.QtCore import Qt, QThreadPool, QItemSelectionModel
 from scripts.load import load_style
 from scripts.constants import *
 from scripts.code_editor import CodeEditorArea
@@ -83,6 +83,12 @@ class MainWidget(QWidget):
             self.opened_file = self.tabEditor.currentWidget().getCurrentPath()
             self.fileManager.setOpenedFile(self.tabEditor.currentWidget().getCurrentPath())
         except AttributeError: pass
+
+        try:
+            self.fileManager.selectionModel().clearSelection()
+            self.fileManager.selectionModel().setCurrentIndex(self.fileManager.model.index(self.tabEditor.currentWidget().getCurrentPath()), QItemSelectionModel.Select)
+        except AttributeError: pass
+
 
     def create_menu_bar(self):
         self.menu_bar = MenuBar(self)

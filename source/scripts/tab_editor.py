@@ -11,6 +11,7 @@ class TabEditorArea(QTabWidget):
         self.addTab(WelcomePage(self), "Welcome")
         self.setStyleSheet(load_style("source/gui/style/tab_editor.css"))
         self.setTabsClosable(True)
+        self.tabCloseRequested.connect(lambda index: self.removeTab(index))
     
     def _add_editor(self, __name: str, __text: str, full_path: str = None) -> None:
         self.codeArea = CodeEditorArea(self)
