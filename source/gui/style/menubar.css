@@ -19,7 +19,7 @@ QMenuBar {
 QMenuBar::item {
     padding: 4px 10px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     margin-top: 5px;
 }
 
@@ -51,7 +51,7 @@ QMenu::item:selected {
 QAction {
     color: #fbf1c7;
     padding: 4px 20px;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 QAction:selected {

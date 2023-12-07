@@ -49,8 +49,10 @@ class MainWidget(QWidget):
     
     def _update(self):
         # retrigger menubar
-        self.menu_bar.clear()
+        try: self.menu_bar.clear()
+        except AttributeError: pass
         self.create_menu_bar()
+        
         self.menu_bar.new_file_action.triggered.connect(self._open_input_newfile_dialog)
         self.menu_bar.new_folder_action.triggered.connect(self._open_input_newfolder_dialog)
         self.menu_bar.open_file_action.triggered.connect(self._open_file)
@@ -84,6 +86,8 @@ class MainWidget(QWidget):
 
         for widget, index in self.tabEditor._get_editor_widgets():
             if not os.path.exists(widget.getCurrentPath()): self.tabEditor.removeTab(index)
+        
+        if self.tabEditor.count() == 0: self.tabEditor.addTab(WelcomePage(self), "Welcome")
 
     def create_menu_bar(self):
         self.menu_bar = MenuBar(self)

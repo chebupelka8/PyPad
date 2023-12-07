@@ -61,13 +61,15 @@ class FileManager(QTreeView):
         self.setHeaderHidden(True)
         
         self.fileMenu = FileManagerMenu(self)
-        # self.trigger_file_menu()
 
         for i in range(1, 4): self.header().setSectionHidden(i, True)
 
         # variables
         self.opened_file = None
         self.update_function = lambda: None
+        self.model.directoryLoaded.connect(self.update_function)
+        self.model.rootPathChanged.connect(self.update_function)
+        self.model.fileRenamed.connect(self.update_function)
     
     def setOpenedFile(self, __path: str) -> None:
         self.opened_file = __path
@@ -80,7 +82,7 @@ class FileManager(QTreeView):
     
     def trigger_file_menu(self, index):
         self.fileMenu.rename_file_action.triggered.connect(lambda: self._rename_file(self.fileMenu._get_current_path()))
-        self.fileMenu.delete_file_action.triggered.connect(lambda: self.model.remove(index))
+        self.fileMenu.delete_file_action.triggered.connect(lambda: self._delete_file_by_index(index))
         self.fileMenu.copy_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path()))
         self.fileMenu.copy_relative_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path(), relative=True))
         self.fileMenu.create_file_action.triggered.connect(self._ask_create_file)
@@ -130,6 +132,10 @@ class FileManager(QTreeView):
 
         os.remove(__path)
 
+        self.update_function()
+    
+    def _delete_file_by_index(self, __index) -> None:
+        self.model.remove(__index)
         self.update_function()
     
     def _copy_path(self, __path: str, relative: bool = False) -> None:
