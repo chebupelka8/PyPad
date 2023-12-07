@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import (
     QFontMetrics, QFont, QColor, 
-    QTextFormat, QTextCursor, QKeyEvent
+    QTextFormat, QTextCursor, QKeyEvent, QCursor
 )
 from PySide6.QtCore import Qt
 from scripts.highlighter import Highlighter
@@ -43,7 +43,7 @@ class CodeEditorArea(QPlainTextEdit):
         self.windowHint = WindowHint(self)
         self.windowHint.show()
         self.windowHint.setVisible(False)
-        self.windowHint.listWidget.clicked.connect(self._append_hint)
+        # self.windowHint.listWidget.clicked.connect(self._append_hint)
         self.cursorPositionChanged.connect(self._show_hints)
         self.textChanged.connect(self._show_hints)
 
@@ -59,20 +59,27 @@ class CodeEditorArea(QPlainTextEdit):
     
     def _append_hint(self, index):
         word = self.windowHint.listWidget.itemFromIndex(index).text()
-
+        
         text = self.toPlainText().split("\n")
-        text[self.currentLine] = text[self.currentLine].replace(self._find_last_word(), "")
+        text[self.currentLine] = text[self.currentLine].replace(self._find_last_word(), word)
         self.setPlainText("\n".join(text))
 
-        self.insertPlainText(word)
+        self.windowHint.listWidget.clearFocus()
         self.windowHint.setVisible(False)
+        self.setFocus()
     
     def _show_hints(self):
-        try: self.windowHint._set_hints(self.windowHint._find_matches(self._find_last_word()))
+        try: self.windowHint.listWidget._set_hints(self.windowHint._find_matches(self._find_last_word()))
         except TypeError: return
         
-        if self.windowHint._get_hints() == 0: self.windowHint.setVisible(False)
-        else: self.windowHint.setVisible(False)
+        if self.windowHint.listWidget._get_count_hints() == 0: 
+            self.windowHint.listWidget.clearFocus()
+            self.windowHint.setVisible(False)
+            self.setFocus()
+        else: 
+            self.windowHint.setVisible(True)
+
+            # self.windowHint.move(QCursor.pos())
     
     def _find_last_word(self) -> str:
         cursor = self.textCursor()
@@ -163,6 +170,7 @@ class CodeEditorArea(QPlainTextEdit):
         
         def _find_tabs(string: str) -> int:
             res = 0
+            
             for letter in string:
                 if letter == " ": res += 1
                 else: break
@@ -204,22 +212,28 @@ class CodeEditorArea(QPlainTextEdit):
             cursor.insertText("    ")
         
         elif event.key() == Qt.Key.Key_Return:
-        
-            previous = self.toPlainText().split("\n")[cursor.blockNumber()]
-            
-            if previous == "": prev = "//none" # it's need for remove exception - list has no index -1
-            elif not previous.isspace() and previous.replace(" ", "") != "": 
-                try: 
-                    prev = previous[:cursor.positionInBlock()].rstrip()
-                    prev[-1]
-                except IndexError: prev = "//none"
-            else: prev = previous
-            
-            if prev[-1] == ":" or self.toPlainText().split("\n")[cursor.blockNumber()][:4] == "    ":
-                tab_count = _find_tabs(previous) + _find_colons(prev)
-                cursor.insertText("\n" + ("    " * tab_count))
+            if not self.windowHint.isVisible():
+                previous = self.toPlainText().split("\n")[cursor.blockNumber()]
+                
+                if previous == "": prev = "//none" # it's need for remove exception - list has no index -1
+                elif not previous.isspace() and previous.replace(" ", "") != "": 
+                    try: 
+                        prev = previous[:cursor.positionInBlock()].rstrip()
+                        prev[-1]
+                    except IndexError: prev = "//none"
+                else: prev = previous
+                
+                if prev[-1] == ":" or self.toPlainText().split("\n")[cursor.blockNumber()][:4] == "    ":
+                    tab_count = _find_tabs(previous) + _find_colons(prev)
+                    cursor.insertText("\n" + ("    " * tab_count))
+                else:
+                    super().keyPressEvent(event)
             else:
-                super().keyPressEvent(event)
+                self._append_hint(*self.windowHint.listWidget.selectedIndexes())
+        
+        elif event.key() == Qt.Key.Key_Up or event.key() == Qt.Key.Key_Down and self.windowHint.isVisible():
+            self.windowHint.listWidget.setFocus()
+            self.windowHint.listWidget.selectFirstItem()
         
         else:
             super().keyPressEvent(event)

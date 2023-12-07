@@ -81,7 +81,7 @@ class FileManager(QTreeView):
         self.update_function = func
     
     def trigger_file_menu(self, index):
-        self.fileMenu.rename_file_action.triggered.connect(lambda: self._rename_file(self.fileMenu._get_current_path()))
+        self.fileMenu.rename_file_action.triggered.connect(lambda: self.openPersistentEditor(index))
         self.fileMenu.delete_file_action.triggered.connect(lambda: self._delete_file_by_index(index))
         self.fileMenu.copy_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path()))
         self.fileMenu.copy_relative_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path(), relative=True))
@@ -92,7 +92,6 @@ class FileManager(QTreeView):
         super().mousePressEvent(event)
 
         if event.button() == Qt.MouseButton.RightButton:
-            # self.openPersistentEditor(self.indexAt(event.pos()))
             self.fileMenu.clear()
             
             self.fileMenu._set_current_path(self._get_path(self.indexAt(event.pos())))
@@ -153,7 +152,7 @@ class FileManager(QTreeView):
 
         return __path if __path != "" else None
     
-    def _open_file(self, __path_to_file: str) -> None | str:
+    def _open_file(self, __path_to_file: str = None) -> None | str:
         if __path_to_file == None or not isinstance(__path_to_file, str): __path_to_file = QFileDialog.getOpenFileName()[0]
         if __path_to_file == "": return
 

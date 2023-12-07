@@ -125,9 +125,7 @@ class MainWidget(QWidget):
         super().closeEvent(event)
     
     def _open_file(self):
-        f = self.fileManager._open_file()
-
-        if f != None: self._open_file_editor(f)
+        if self.fileManager._open_file() != None: self._open_file_editor(self.fileManager._open_file())
     
     def _open_file_editor(self, __path: str):
         if os.path.isfile(__path):
