@@ -36,12 +36,6 @@ class MainWidget(QWidget):
         self.setup_ui()
 
         self.setLayout(self.mainLayout) # set main layout
-        
-        self.create_menu_bar()
-
-        # variables 
-        self.thread_pool = QThreadPool()
-        self.opened_file = None # current file (opened in editor)
 
         self._update()
     
@@ -80,7 +74,6 @@ class MainWidget(QWidget):
         except AttributeError: pass
 
         try: 
-            self.opened_file = self.tabEditor.currentWidget().getCurrentPath()
             self.fileManager.setOpenedFile(self.tabEditor.currentWidget().getCurrentPath())
         except AttributeError: pass
 
@@ -108,10 +101,12 @@ class MainWidget(QWidget):
         self.fileManager = FileManager()
         self.fileManager.clicked.connect(lambda index: self._open_file_editor(self.fileManager._get_path(index)))
         self.fileManager.setUpdateFunction(self._update)
-        # self.fileManager.fileMenu.rename_file_action.triggered.connect()
 
         # side bar set up
         self.statusBar = StatusBar(self)
+
+        # thread pool set up
+        self.thread_pool = QThreadPool()
 
         # add Widgets to layouts
         self.codeLayout.addWidget(self.fileManager, stretch=4)
@@ -136,8 +131,7 @@ class MainWidget(QWidget):
                 with open(__path, "r", encoding="utf-8") as file:
                     code = file.read()
                 
-                self.opened_file = __path
-                self.fileManager.setOpenedFile(self.opened_file)
+                self.fileManager.setOpenedFile(__path)
                 self.tabEditor._add_editor(__path.split("/")[-1], code, __path)
                 self.tabEditor.setCurrentIndex(self.tabEditor._get_index_by_full_path(__path))
                 
@@ -147,11 +141,9 @@ class MainWidget(QWidget):
                 print(f"Unknown file. {e}")
     
     def _save_file(self):
-        self.opened_file = self.fileManager.getOpenedFile()
+        if self.fileManager.getOpenedFile() == None: return
 
-        if self.opened_file == None: return
-
-        with open(self.opened_file, "w", encoding="utf-8") as file:
+        with open(self.fileManager.getOpenedFile(), "w", encoding="utf-8") as file:
             file.write(self.tabEditor.currentWidget().toPlainText())
     
     def _open_input_newfile_dialog(self):
@@ -178,26 +170,19 @@ class MainWidget(QWidget):
     def _run_python_file(self):
         self._save_file()
 
-        if self.opened_file != None and self.opened_file.split(".")[-1] == "py":
+        if self.fileManager.getOpenedFile() != None and self.fileManager.getOpenedFile().split(".")[-1] == "py":
             dir_ = self.fileManager._get_directory()
-            path_ = self.opened_file[self.opened_file.find(dir_) + len(dir_) + 1:]
+            path_ = self.fileManager.getOpenedFile()[self.fileManager.getOpenedFile().find(dir_) + len(dir_) + 1:]
             
             console = ConsoleRunWorker(dir_, path_)
             self.thread_pool.start(console._run_python_file)
-
-
-            # os.system(f"cd {dir_} && python {self.opened_file[self.opened_file.find(dir_) + len(dir_) + 1:]}")
-            
-            # print(f"cd {dir_} && python {self.opened_file[self.opened_file.find(dir_) + len(dir_) + 1:]}")
-        
-        self._save_file()
     
     def _run_console(self):
         self._save_file()
 
-        if self.opened_file != None and self.opened_file.split(".")[-1] == "py":
+        if self.fileManager.getOpenedFile() != None and self.fileManager.getOpenedFile().split(".")[-1] == "py":
             dir_ = self.fileManager._get_directory()
-            path_ = self.opened_file[self.opened_file.find(dir_) + len(dir_) + 1:]
+            path_ = self.fileManager.getOpenedFile()[self.fileManager.getOpenedFile().find(dir_) + len(dir_) + 1:]
 
             self.thread_pool.start(lambda: self.consoleEmulator._run_command(f"cd {dir_} && python {path_}"))
             self.consoleEmulator.show()

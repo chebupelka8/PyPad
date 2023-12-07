@@ -59,10 +59,9 @@ class FileManager(QTreeView):
         self.setModel(self.model)
         self.setRootIndex(self.model.index(""))
         self.setHeaderHidden(True)
-
-
+        
         self.fileMenu = FileManagerMenu(self)
-        self.trigger_file_menu()
+        # self.trigger_file_menu()
 
         for i in range(1, 4): self.header().setSectionHidden(i, True)
 
@@ -79,9 +78,9 @@ class FileManager(QTreeView):
     def setUpdateFunction(self, func: object) -> None:
         self.update_function = func
     
-    def trigger_file_menu(self):
+    def trigger_file_menu(self, index):
         self.fileMenu.rename_file_action.triggered.connect(lambda: self._rename_file(self.fileMenu._get_current_path()))
-        self.fileMenu.delete_file_action.triggered.connect(lambda: self._delete_file(self.fileMenu._get_current_path()))
+        self.fileMenu.delete_file_action.triggered.connect(lambda: self.model.remove(index))
         self.fileMenu.copy_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path()))
         self.fileMenu.copy_relative_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path(), relative=True))
         self.fileMenu.create_file_action.triggered.connect(self._ask_create_file)
@@ -96,7 +95,7 @@ class FileManager(QTreeView):
             
             self.fileMenu._set_current_path(self._get_path(self.indexAt(event.pos())))
             self.fileMenu.setup_ui()
-            self.trigger_file_menu()
+            self.trigger_file_menu(self.indexAt(event.pos()))
             if len(self._get_path(self.indexAt(event.pos()))) == 0: self.fileMenu._set_current_path(self._get_directory())
             
             self.fileMenu.move(QCursor.pos())
