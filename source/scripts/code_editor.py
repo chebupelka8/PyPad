@@ -43,8 +43,7 @@ class CodeEditorArea(QPlainTextEdit):
         self.windowHint = WindowHint(self)
         self.windowHint.show()
         self.windowHint.setVisible(False)
-        # self.windowHint.listWidget.clicked.connect(self._append_hint)
-        self.cursorPositionChanged.connect(self._show_hints)
+        # self.cursorPositionChanged.connect(self._show_hints)
         self.textChanged.connect(self._show_hints)
 
         # variables 
@@ -64,7 +63,6 @@ class CodeEditorArea(QPlainTextEdit):
         text[self.currentLine] = text[self.currentLine].replace(self._find_last_word(), word)
         self.setPlainText("\n".join(text))
 
-        self.windowHint.listWidget.clearFocus()
         self.windowHint.setVisible(False)
         self.setFocus()
     
@@ -73,7 +71,6 @@ class CodeEditorArea(QPlainTextEdit):
         except TypeError: return
         
         if self.windowHint.listWidget._get_count_hints() == 0: 
-            self.windowHint.listWidget.clearFocus()
             self.windowHint.setVisible(False)
             self.setFocus()
         else: 
@@ -234,6 +231,10 @@ class CodeEditorArea(QPlainTextEdit):
         elif event.key() == Qt.Key.Key_Up or event.key() == Qt.Key.Key_Down and self.windowHint.isVisible():
             self.windowHint.listWidget.setFocus()
             self.windowHint.listWidget.selectFirstItem()
+        
+        elif event.key() == Qt.Key.Key_Escape and self.windowHint.isVisible():
+            self.windowHint.setVisible(False)
+            self.setFocus()
         
         else:
             super().keyPressEvent(event)

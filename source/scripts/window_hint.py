@@ -55,7 +55,7 @@ class WindowHint(QWidget):
         self.mainLayout.addWidget(self.listWidget)
 
     def _find_matches(self, text: str) -> list[str]:
-        if text.replace(" ", "") == "": return []
+        if text == "": return []
         
         result = []
 
