@@ -1,7 +1,7 @@
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QLabel, QWidget, QVBoxLayout, QListWidget
 from PySide6.QtCore import Qt, QItemSelectionModel, QModelIndex
-from scripts.constants import keywords
+from scripts.constants import python_dictionary
 
 class HintListWidget(QListWidget):
     def __init__(self, parent = None) -> None:
@@ -59,7 +59,7 @@ class WindowHint(QWidget):
         
         result = []
 
-        for match in keywords:
+        for match in python_dictionary:
             if match.find(text) != -1: result.append(match)
         
         return result

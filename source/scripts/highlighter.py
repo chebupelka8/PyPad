@@ -43,7 +43,7 @@ class Highlighter(QSyntaxHighlighter):
         # print("************\n" + self.plainText + "\n************")
         self._highlight_match(r"^\s*class .*", self.classes_format, text)
         self._highlight_match(r"^\s*def \w*\(.*\).*:", self.defindfunc_format, text)
-        self._highlight_match(r"\b(and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)\b", self.keyword_format, text)
+        self._highlight_match(r"\b(and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|case)\b", self.keyword_format, text)
         self._highlight_match(r"\b(divmod|map|filter|zip|super|open|help|hex|abs|eval|exec|ord|chr|sorted|reversed|enumerate|range|sum|repr|round|type|all|any)\b", self.function_format, text)
         self._highlight_match(r"\b(True|False|None)\b", self.logical_format, text)
         self._highlight_match(r"\b(int|float|str|dict|set|tuple|list|bool)\b", self.data_types_format, text)

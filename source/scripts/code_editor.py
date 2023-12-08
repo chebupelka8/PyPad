@@ -58,14 +58,21 @@ class CodeEditorArea(QPlainTextEdit):
     
     def _append_hint(self, index):
         word = self.windowHint.listWidget.itemFromIndex(index).text()
+
+        cursor_position = self.textCursor().position() # save cursor position before insert
+        last_word = self._find_last_word()
         
         text = self.toPlainText().split("\n")
         text_line = text[self.currentLine]
-        before_last = text_line[:self.textCursor().positionInBlock()].rfind(self._find_last_word())
-        
-        text[self.currentLine] = text_line[:before_last] + word + text_line[self.textCursor().positionInBlock() + len(self._find_last_word()):]
+        before_last = text_line[:self.textCursor().positionInBlock()].rfind(last_word)
+        text[self.currentLine] = text_line[:before_last] + word + text_line[self.textCursor().positionInBlock() + len(last_word):]
         
         self.setPlainText("\n".join(text))
+
+        # keep cursor position
+        cursor = self.textCursor()
+        cursor.setPosition(cursor_position + len(word) - len(last_word))
+        self.setTextCursor(cursor)
 
         self.windowHint.setVisible(False)
         self.setFocus()
@@ -80,7 +87,7 @@ class CodeEditorArea(QPlainTextEdit):
         else: 
             self.windowHint.setVisible(True)
 
-            # self.windowHint.move(QCursor.pos())
+            # self.windowHint.move()
     
     def _find_last_word(self) -> str:
         cursor = self.textCursor()
