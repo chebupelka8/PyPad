@@ -239,9 +239,12 @@ class CodeEditorArea(QPlainTextEdit):
             else:
                 self._append_hint(*self.windowHint.listWidget.selectedIndexes())
         
-        elif event.key() == Qt.Key.Key_Up or event.key() == Qt.Key.Key_Down and self.windowHint.isVisible():
-            self.windowHint.listWidget.setFocus()
-            self.windowHint.listWidget.selectFirstItem()
+        elif event.key() == Qt.Key.Key_Up or event.key() == Qt.Key.Key_Down:
+            if self.windowHint.isVisible():
+                self.windowHint.listWidget.setFocus()
+                self.windowHint.listWidget.selectFirstItem()
+            else:
+                super().keyPressEvent(event)
         
         elif event.key() == Qt.Key.Key_Escape and self.windowHint.isVisible():
             self.windowHint.setVisible(False)
