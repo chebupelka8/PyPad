@@ -60,7 +60,11 @@ class CodeEditorArea(QPlainTextEdit):
         word = self.windowHint.listWidget.itemFromIndex(index).text()
         
         text = self.toPlainText().split("\n")
-        text[self.currentLine] = text[self.currentLine].replace(self._find_last_word(), word)
+        text_line = text[self.currentLine]
+        before_last = text_line[:self.textCursor().positionInBlock()].rfind(self._find_last_word())
+        
+        text[self.currentLine] = text_line[:before_last] + word + text_line[self.textCursor().positionInBlock() + len(self._find_last_word()):]
+        
         self.setPlainText("\n".join(text))
 
         self.windowHint.setVisible(False)
