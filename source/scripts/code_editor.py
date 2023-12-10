@@ -25,6 +25,7 @@ class CodeEditorArea(QPlainTextEdit):
         else:
             self.setCursorWidth(1)
         self.cursorPositionChanged.connect(self._updateCurrentLine)
+        self.verticalScrollBar().valueChanged.connect(self._show_hints)
         
         Highlighter(self) # set syntax highlitning
 
@@ -43,7 +44,6 @@ class CodeEditorArea(QPlainTextEdit):
         self.windowHint = WindowHint(self)
         self.windowHint.show()
         self.windowHint.setVisible(False)
-        # self.cursorPositionChanged.connect(self._show_hints)
         self.textChanged.connect(self._show_hints)
 
         # variables 
@@ -61,6 +61,7 @@ class CodeEditorArea(QPlainTextEdit):
 
         cursor_position = self.textCursor().position() # save cursor position before insert
         last_word = self._find_last_word()
+        print(last_word)
         
         text = self.toPlainText().split("\n")
         text_line = text[self.currentLine]
@@ -87,7 +88,8 @@ class CodeEditorArea(QPlainTextEdit):
         else: 
             self.windowHint.setVisible(True)
 
-            # self.windowHint.move()
+            current_font = self.font()
+            self.windowHint.move(self.cursorRect().x(), self.cursorRect().y() + current_font.pixelSize())
     
     def _find_last_word(self) -> str:
         cursor = self.textCursor()

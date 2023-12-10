@@ -17,6 +17,7 @@ class TabEditorArea(QTabWidget):
         self.codeArea = CodeEditorArea(self)
         self.codeArea.insertPlainText(__text)
         self.codeArea.setCurrentPath(full_path)
+        print(self.codeArea.__dict__)
 
         if self._get_by_full_path(full_path) == None: self.addTab(self.codeArea, __name)
         # self.addTab(self.codeArea, __name)
