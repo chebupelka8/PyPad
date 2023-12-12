@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QLabel, QWidget, QVBoxLayout, QListWidget
 from PySide6.QtCore import Qt, QItemSelectionModel, QModelIndex
 from scripts.constants import python_dictionary
 
+
 class HintListWidget(QListWidget):
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
@@ -43,11 +44,12 @@ class HintListWidget(QListWidget):
             self.setCurrentItem(next_item)
 
 
-
 class WindowHint(QWidget):
     def __init__(self, parent) -> None:
         super(WindowHint, self).__init__(parent)
 
+        self.resize(600, 200)
+        
         self.mainLayout = QVBoxLayout()
         self.setLayout(self.mainLayout)
 

@@ -61,7 +61,6 @@ class CodeEditorArea(QPlainTextEdit):
 
         cursor_position = self.textCursor().position() # save cursor position before insert
         last_word = self._find_last_word()
-        print(last_word)
         
         text = self.toPlainText().split("\n")
         text_line = text[self.currentLine]
@@ -87,15 +86,15 @@ class CodeEditorArea(QPlainTextEdit):
             self.setFocus()
         else: 
             self.windowHint.setVisible(True)
-
-            current_font = self.font()
-            self.windowHint.move(self.cursorRect().x(), self.cursorRect().y() + current_font.pixelSize())
+            self.windowHint.move(self.cursorRect().x(), self.cursorRect().y() + self.font().pixelSize())
     
     def _find_last_word(self) -> str:
         cursor = self.textCursor()
         try: 
-            dt = self.toPlainText().split("\n")[self.currentLine][:cursor.positionInBlock()]
-            return dt.split(" ")[-1]
+            dt = self.toPlainText().split("\n")[self.currentLine][:cursor.positionInBlock()].split(" ")[-1].split(".")[-1]
+            for char in "()[]{}": dt = dt.strip(char)
+            return dt
+        
         except IndexError: pass 
     
     def _highlightCurrentLine(self):
@@ -132,7 +131,6 @@ class CodeEditorArea(QPlainTextEdit):
         cursor = self.textCursor()
         cursor.movePosition(QTextCursor.Left, QTextCursor.KeepAnchor)
         selectedText = cursor.selectedText()
-        # print(selectedText)
 
         def _insert(__symbols: list):
             if selectedText == __symbols[0]:
@@ -222,7 +220,7 @@ class CodeEditorArea(QPlainTextEdit):
             cursor.insertText("    ")
         
         elif event.key() == Qt.Key.Key_Return:
-            if not self.windowHint.isVisible():
+            if not self.windowHint.isVisible() and not self.windowHint.hasFocus():
                 previous = self.toPlainText().split("\n")[cursor.blockNumber()]
                 
                 if previous == "": prev = "//none" # it's need for remove exception - list has no index -1
@@ -239,7 +237,10 @@ class CodeEditorArea(QPlainTextEdit):
                 else:
                     super().keyPressEvent(event)
             else:
-                self._append_hint(*self.windowHint.listWidget.selectedIndexes())
+                try:
+                    self._append_hint(*self.windowHint.listWidget.selectedIndexes())
+                except TypeError:
+                    return
         
         elif event.key() == Qt.Key.Key_Up or event.key() == Qt.Key.Key_Down:
             if self.windowHint.isVisible():

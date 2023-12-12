@@ -8,7 +8,6 @@ from PySide6.QtGui import (
 from PySide6.QtCore import Qt, QThreadPool, QItemSelectionModel
 from scripts.load import load_style
 from scripts.constants import *
-from scripts.code_editor import CodeEditorArea
 from scripts.file_manager import FileManager
 from scripts.input_filename import AskInputFileName
 from scripts.menubar import MenuBar

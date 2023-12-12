@@ -16,5 +16,5 @@ python_dictionary = [
     'range', 'slice', 'str', 'int', 'float', 'dict', 'set', 'list', 'tuple', 'iter', 'any',
     'all', 'reversed', 'repr', 'round', 'id', 'input', 'object', 'ord', 'chr', 'open', 'oct',
     'abs', 'sum', 'sorted', 'super', 'dir', 'divmod', 'format', 'help', 'hex', 'len', 'case',
-    'setattr'
+    'setattr', 'self'
 ]

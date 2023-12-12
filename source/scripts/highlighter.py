@@ -50,7 +50,7 @@ class Highlighter(QSyntaxHighlighter):
         self._highlight_match(r"\(|\)|\[|\]|\{|\}", self.brackets_format, text)
         self._highlight_match(r"\b(self)\b", self.special_format, text)
         self._highlight_match(r"1|2|3|4|5|6|7|8|9|0", self.numbers_format, text)
-        self._highlight_match(r"\=|\+|\-|\>|\&|\<|\%|\/|\*", self.symbols_format, text)
+        self._highlight_match(r"\=|\+|\-|\>|\&|\<|\%|\/|\*|\|", self.symbols_format, text)
         self._highlight_match(r'@.*$', self.decorator_format, text)
         self._highlight_match(r'#.*$', self.comments_format, text)
         self._highlight_match(r'".*?\n*?"|".*?', self.string_format, text)
