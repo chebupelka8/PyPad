@@ -1,0 +1,36 @@
+@import url('https://fonts.cdnfonts.com/css/cascadia-code');
+
+* {
+    font-family: 'Cascadia Code', sans-serif;
+    color: white;
+    font-size: 16px;
+}
+
+QWidget#settings-menu {
+    background-color: #252728;
+}
+
+QScrollArea {
+    border: none;
+}
+
+QLineEdit {
+    background-color: #2d2d2d;
+    border: 1px solid white;
+    padding: 2px;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+QPushButton {
+    background-color: #353535;
+    color: white;
+    border-radius: 7px;
+    padding: 2px;
+    width: 80px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    border: 1px solid #454545;
+}

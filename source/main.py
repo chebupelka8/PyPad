@@ -16,6 +16,7 @@ from scripts.console import ConsoleEmulator
 from scripts.welcome_page import WelcomePage
 from scripts.status_bar import StatusBar
 from scripts.tab_editor import TabEditorArea
+from scripts.settings import SettingsMenu, ScrollerWidget
 import sys, os
 
 
@@ -52,6 +53,7 @@ class MainWidget(QWidget):
         except AttributeError: pass
         self.create_menu_bar()
         
+        self.menu_bar.open_settings_menu_action.triggered.connect(self.scrollerSettings.show)
         self.menu_bar.new_file_action.triggered.connect(self._open_input_newfile_dialog)
         self.menu_bar.new_folder_action.triggered.connect(self._open_input_newfolder_dialog)
         self.menu_bar.open_file_action.triggered.connect(self._open_file)
@@ -104,6 +106,11 @@ class MainWidget(QWidget):
         self.fileManager = FileManager()
         self.fileManager.clicked.connect(lambda index: self._open_file_editor(self.fileManager._get_path(index)))
         self.fileManager.setUpdateFunction(self._update)
+
+        # settings set up
+        self.settingsMenu = SettingsMenu()
+        self.scrollerSettings = ScrollerWidget()
+        self.scrollerSettings.setWidget(self.settingsMenu)
 
         # side bar set up
         self.statusBar = StatusBar(self)

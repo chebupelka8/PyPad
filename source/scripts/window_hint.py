@@ -28,7 +28,6 @@ class HintListWidget(QListWidget):
     def keyPressEvent(self, event: QKeyEvent) -> None:
         super().keyPressEvent(event)
 
-        # self.setPositionForIndex()
         if event.key() == Qt.Key.Key_Down:
             pass
 
@@ -49,7 +48,7 @@ class WindowHint(QWidget):
         super(WindowHint, self).__init__(parent)
 
         self.resize(600, 200)
-        
+
         self.mainLayout = QVBoxLayout()
         self.setLayout(self.mainLayout)
 

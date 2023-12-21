@@ -81,7 +81,7 @@ class FileManager(QTreeView):
         self.update_function = func
     
     def trigger_file_menu(self, index):
-        self.fileMenu.rename_file_action.triggered.connect(lambda: self.openPersistentEditor(index))
+        self.fileMenu.rename_file_action.triggered.connect(lambda: self._rename_file(self.fileMenu._get_current_path()))
         self.fileMenu.delete_file_action.triggered.connect(lambda: self._delete_file_by_index(index))
         self.fileMenu.copy_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path()))
         self.fileMenu.copy_relative_path_action.triggered.connect(lambda: self._copy_path(self.fileMenu._get_current_path(), relative=True))
